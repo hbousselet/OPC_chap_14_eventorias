@@ -28,13 +28,24 @@ struct EventsList: View {
                 .padding(.horizontal, 20)
                 
             }
+            .task {
+                await viewModel.fetchEvents()
+            }
     }
     
     private func eventElement(_ event: EventModel) -> some View {
         HStack {
             AsyncImage(url: event.image)
                 .frame(width: 20, height: 20)
+            VStack {
+                Text(event.title)
+                Text(event.date, style: .date)
+            }
+            .onAppear {
+                print("event : \(event)")
+            }
         }
+        .foregroundStyle(.white)
     }
     
     private func sortingCapsule() -> some View {
