@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SplashView: View {
     @State var presentLoginView: Bool = false
+    
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {

@@ -28,7 +28,9 @@ struct OPC_Chap14_EventoriasApp: App {
             if Auth.auth().currentUser != nil {
                 Home()
             } else {
-                SplashView()
+                NavigationStack {
+                    SplashView()
+                }
             }
         }
     }

@@ -31,6 +31,22 @@ struct EventsList: View {
             .task {
                 await viewModel.fetchEvents()
             }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        viewModel.logout()
+                    } label: {
+                        Label("LogOut", systemImage: "rectangle.portrait.and.arrow.right")
+                    }
+                    .foregroundStyle(.white)
+                }
+            }
+            .navigationDestination(isPresented: Binding(
+                get: { viewModel.signOut },
+                set: { viewModel.signOut = $0 }
+            )) {
+                LoginView()
+            }
     }
     
     private func eventElement(_ event: EventModel) -> some View {
