@@ -9,7 +9,9 @@ import SwiftUI
 
 struct SignUp: View {
     @State var viewModel: AuthtenticationViewModel = AuthtenticationViewModel()
-    
+    @Environment(\.dismiss) var dismiss
+    @Environment(AuthFirebase.self) private var firebase
+
     var body: some View {
         ZStack(alignment: .top) {
             Color.gray.ignoresSafeArea(.all)
@@ -24,6 +26,10 @@ struct SignUp: View {
                 Button {
                     Task {
                         await viewModel.signUp()
+                        if viewModel.isAuthenticated {
+                            firebase.isAuthenticated = true
+                            dismiss()
+                        }
                     }
                 } label: {
                     HStack(alignment: .center) {
@@ -42,12 +48,5 @@ struct SignUp: View {
                     .foregroundStyle(.white)
             }
         }
-        .navigationDestination(isPresented: $viewModel.isAuthenticated) {
-            Home()
-        }
     }
-}
-
-#Preview {
-    SignUp()
 }

@@ -16,28 +16,25 @@ import FirebaseFirestore
     var search: String = ""
     var signOut: Bool = false
     
-    init() {
+    init(event: [EventModel]) {
+        self.events = events
     }
     
     func fetchEvents() async {
         do {
             let firestoreEvents = try await Event.fetchEvents()
             events = firestoreEvents.compactMap { $0.convert() }
-            print("eventviewmodel= \(events)")
+            
+            for (index, event) in events.enumerated() {
+                guard let userid = event.user else { continue }
+                let user = try await User.fetchUser(userid)
+                events[index].profil = user
+            }
         } catch {
             print("error : \(error)")
         }
-        
     }
     
-    func logout() {
-        do {
-            try Auth.auth().signOut()
-            signOut = true
-        } catch {
-            print("Error at signout: \(error)")
-        }
-    }
     
 }
     

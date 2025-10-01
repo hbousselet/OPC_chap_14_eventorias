@@ -12,7 +12,7 @@ import FirebaseFirestore
 struct User: Codable {
     let name: String
     let email: String
-    let icon: String?
+    let icon: URL?
     let notification: Bool
 }
 
@@ -26,6 +26,26 @@ extension User {
                 "icon": icon ?? "",
                 "notification": notification
             ])
+        } catch {
+            print("Error getting documents: \(error)")
+            throw error
+        }
+    }
+    
+    static func fetchUser(_ userId: String) async throws -> Self {
+        do {
+            let db = Firestore.firestore()
+            let docRef = db.collection("User").document(userId)
+
+            
+            let document = try await docRef.getDocument()
+            if document.exists {
+                let user = try document.data(as: User.self)
+                print("user: \(user)")
+                return user
+            } else {
+                throw CocoaError(.fileReadNoSuchFile)
+            }
         } catch {
             print("Error getting documents: \(error)")
             throw error

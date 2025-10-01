@@ -13,21 +13,23 @@ import FirebaseFirestore
 
 class EventModel: Identifiable {
     let id: UUID
-    let title: String
+    let name: String
     let description: String
     let date: Date
-    let userUrl: URL? // afin de choper la photoURL
+    let user: String? // afin de choper la photoURL
     let address: Address?
     let image: URL?
+    var profil: User?
     
-    init(id: UUID, title: String, description: String, date: Date, userUrl: URL?, address: Address?, image: URL?) {
+    init(id: UUID, name: String, description: String, date: Date, user: String?, address: Address?, image: URL?, profil: User? = nil) {
         self.id = id
-        self.title = title
+        self.name = name
         self.description = description
         self.date = date
-        self.userUrl = userUrl
+        self.user = user
         self.address = address
         self.image = image
+        self.profil = profil
     }
     
     static let defaultLat: Double = 48.856019
@@ -44,12 +46,13 @@ public struct Address: Codable {
 extension EventModel {
     convenience init(from event: Event) {
         self.init(id: UUID(),
-                  title: event.title,
+                  name: event.name,
                   description: event.description,
                   date: event.date,
-                  userUrl: URL(string: event.userURL ?? ""),
+                  user: event.user,
                   address: Address(latitude: event.address?.latitude ?? EventModel.defaultLat,
                                    longitude: event.address?.longitude ?? EventModel.defaultLong),
-                  image: URL(string: event.imageURL ?? ""))
+                  image: URL(string: event.image ?? "")
+                    )
     }
 }

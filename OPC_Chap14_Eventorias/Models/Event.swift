@@ -14,9 +14,9 @@ struct Event: Codable {
     let address: GeoPoint?
     let date: Date
     let description: String
-    let title: String
-    let imageURL: String?
-    let userURL: String?
+    let name: String
+    let image: String?
+    let user: String?
 }
 
 extension Event {
