@@ -15,6 +15,21 @@ struct EventsList: View {
             GeometryReader { geometry in
             Color.black.ignoresSafeArea(.all)
             ScrollView {
+                ZStack(alignment: .bottomTrailing) {
+                    Button {
+                        
+                    } label: {
+                        RoundedRectangle(cornerRadius: 12)
+                            .frame(width: 56, height: 56)
+                            .foregroundStyle(.red)
+                            .overlay {
+                                Image(systemName: "plus")
+                                    .foregroundStyle(.white)
+                                    .background(.red)
+                            }
+                    }
+                    .glassEffect(.clear)
+                    .zIndex(2)
                     VStack(alignment: .leading) {
                         CustomTextField(viewModel: viewModel)
                         sortingCapsule()
@@ -25,6 +40,8 @@ struct EventsList: View {
                         .padding(.top, 8)
                     }
                     .padding(.horizontal, 16)
+                    .zIndex(1)
+                }
                 }
             }
         }
@@ -128,3 +145,4 @@ struct CustomTextField: View {
 //        .environment(eventViewModel)
 //    
 //}
+

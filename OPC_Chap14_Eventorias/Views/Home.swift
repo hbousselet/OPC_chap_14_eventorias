@@ -9,22 +9,22 @@ import SwiftUI
 
 struct Home: View {
     @Environment(AuthFirebase.self) private var firebase
-    @State private var search: String = ""
+    @SceneStorage("selectedTab") private var selectedTabIndex = 0
+
     @State private var eventViewModel: EventsViewModel = EventsViewModel(event: [])
     var onLogout: () -> Void = { }
 
     var body: some View {
-        TabView {
-            Tab("Events", systemImage: "4.circle", role: .search) {
+        TabView(selection: $selectedTabIndex) {
+            Tab("Events", systemImage: "1.circle", value: 0) {
                 EventsList()
                     .environment(eventViewModel)
             }
-            Tab("Profile", systemImage: "2.circle") {
+            Tab("Profile", systemImage: "2.circle", value: 1) {
                 Profile()
             }
         }
         .tabViewStyle(.sidebarAdaptable)
-        .searchable(text: $search)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
