@@ -61,7 +61,7 @@ struct EventsList: View {
     
     private func sortingCapsule() -> some View {
         Button {
-            
+            // to do
         } label: {
             HStack {
                 Image(systemName: "heart")
@@ -74,6 +74,7 @@ struct EventsList: View {
         .background(.gray, in: .capsule)
     }
     
+    @ViewBuilder
     private func image(with url: URL?, size: CGSize) -> some View {
         AsyncImage(url: url,
                    transaction: Transaction(animation: .easeInOut)) { phase in
@@ -84,11 +85,22 @@ struct EventsList: View {
                     .frame(width: size.width, height: size.height)
                     .clipped()
             default:
-                Image("placeholder-rectangle")
-                    .frame(width: size.width, height: size.height)
-                    .clipped()
+                ZStack(alignment: .center) {
+                    Image("placeholder-rectangle")
+                        .frame(width: size.width, height: size.height)
+                        .zIndex(1)
+                        .clipped()
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .zIndex(2)
+                        .foregroundStyle(.white)
+                }
             }
         }
+                   .onAppear {
+                       print("url: \(String(describing: url))")
+
+                   }
     }
 }
 

@@ -41,10 +41,9 @@ extension User {
             let document = try await docRef.getDocument()
             if document.exists {
                 let user = try document.data(as: User.self)
-                print("user: \(user)")
                 return user
             } else {
-                throw CocoaError(.fileReadNoSuchFile)
+                throw CocoaError(.fileReadNoSuchFile) // to be changed
             }
         } catch {
             print("Error getting documents: \(error)")

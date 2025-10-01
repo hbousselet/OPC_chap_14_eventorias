@@ -23,13 +23,14 @@ import FirebaseFirestore
     func fetchEvents() async {
         do {
             let firestoreEvents = try await Event.fetchEvents()
-            events = firestoreEvents.compactMap { $0.convert() }
+            var convertedEvents: [EventModel] = firestoreEvents.compactMap { $0.convert() }
             
-            for (index, event) in events.enumerated() {
+            for (index, event) in convertedEvents.enumerated() {
                 guard let userid = event.user else { continue }
                 let user = try await User.fetchUser(userid)
-                events[index].profil = user
+                convertedEvents[index].profil = user
             }
+            events = convertedEvents
         } catch {
             print("error : \(error)")
         }
