@@ -13,35 +13,23 @@ struct EventsList: View {
     var body: some View {
         ZStack(alignment: .top) {
             GeometryReader { geometry in
-            Color.black.ignoresSafeArea(.all)
-            ScrollView {
                 ZStack(alignment: .bottomTrailing) {
-                    Button {
-                        
-                    } label: {
-                        RoundedRectangle(cornerRadius: 12)
-                            .frame(width: 56, height: 56)
-                            .foregroundStyle(.red)
-                            .overlay {
-                                Image(systemName: "plus")
-                                    .foregroundStyle(.white)
-                                    .background(.red)
+                    addEventButton()
+                        .zIndex(2)
+                    Color.black.ignoresSafeArea(.all)
+                    ScrollView {
+                        VStack(alignment: .leading) {
+                            CustomTextField(viewModel: viewModel)
+                            sortingCapsule()
+                            ForEach(viewModel.events, id: \.id) { event in
+                                eventElement(event, with: geometry.size)
+                                    .frame(width: geometry.size.width * 0.9, height: 80)
                             }
-                    }
-                    .glassEffect(.clear)
-                    .zIndex(2)
-                    VStack(alignment: .leading) {
-                        CustomTextField(viewModel: viewModel)
-                        sortingCapsule()
-                        ForEach(viewModel.events, id: \.id) { event in
-                            eventElement(event, with: geometry.size)
-                                .frame(width: geometry.size.width * 0.9, height: 80)
+                            .padding(.top, 8)
                         }
-                        .padding(.top, 8)
+                        .padding(.horizontal, 16)
                     }
-                    .padding(.horizontal, 16)
                     .zIndex(1)
-                }
                 }
             }
         }
@@ -49,6 +37,22 @@ struct EventsList: View {
         .task {
             await viewModel.fetchEvents()
         }
+    }
+    
+    private func addEventButton() -> some View {
+        Button {
+            
+        } label: {
+            RoundedRectangle(cornerRadius: 12)
+                .frame(width: 56, height: 56)
+                .foregroundStyle(.clear)
+                .overlay {
+                    Image(systemName: "plus")
+                        .foregroundStyle(.white)
+                        .background(.clear)
+                }
+        }
+        .glassEffect(.clear)
     }
     
     private func eventElement(_ event: EventModel, with size: CGSize) -> some View {
