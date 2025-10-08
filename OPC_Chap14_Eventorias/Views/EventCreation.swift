@@ -6,29 +6,35 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct EventCreation: View {
     @State private var viewModel: EventCreationViewModel = EventCreationViewModel()
+    
+    @State private var pickerItem: PhotosPickerItem?
+    @State private var selectedImage: Image?
         
     var body: some View {
+        //please remove the navigationStack, only required for thee preview
         NavigationStack {
             ZStack(alignment: .top) {
-                Color.customGray.ignoresSafeArea(.all)
+                Color.customGray
+                    .ignoresSafeArea(.all)
                 ScrollView {
-                    VStack(alignment: .leading) {
+                    VStack {
                         CustoTextfield(title: "Title",
                                        introduction: "New event",
                                        keyboardType: .default,
                                        promptValue: $viewModel.title,
                                        size: CGSize(width: 358, height: 56))
-//                        .padding(.top, 12)
+                        .padding(.top, .topPadding)
                         CustoTextfield(title: "Description",
                                        introduction: "Tap here to enter your description",
                                        keyboardType: .default,
                                        promptValue: $viewModel.description,
                                        size: CGSize(width: 358, height: 56))
-//                        .padding(.top, 12)
-                        HStack {
+                        .padding(.top, .topPadding)
+                        HStack(alignment: .center) {
                             CustoTextfield(title: "Date",
                                            introduction: "MM/DD/YYYY",
                                            keyboardType: .default,
@@ -40,34 +46,36 @@ struct EventCreation: View {
                                            promptValue: $viewModel.time,
                                            size: CGSize(width: 176, height: 56))
                         }
-//                        .padding(.top, 12)
+                        .padding(.top, .topPadding)
                         CustoTextfield(title: "Address",
                                        introduction: "Enter full address",
                                        keyboardType: .default,
                                        promptValue: $viewModel.address,
                                        size: CGSize(width: 358, height: 56))
-                        HStack {
+                        .padding(.top, .topPadding)
+                        HStack(alignment: .center) {
                             cameraButton
                             pictureButton
                         }
-                        Spacer()
-                        Button {
-                            
-                        } label: {
-                            HStack(alignment: .center) {
-                                Text("Validate")
-                                    .foregroundStyle(.white)
-                            }
-                            .frame(width: 358, height: 52)
-                            .background(.red)
-                        }
+                        .padding(.top, 48)
                     }
                     .padding(.horizontal, 16)
+                    .padding(.bottom)
                 }
                 .padding(.top, 180)
                 .ignoresSafeArea(edges: .top)
             }
             .navigationTitle("Creation of an Event")
+            .safeAreaInset(edge: .bottom) {
+                validateButton
+                .padding(.horizontal, 16)
+                .padding(.bottom, 16)
+            }
+            .onChange(of: pickerItem) {
+                Task {
+                    selectedImage = try await pickerItem?.loadTransferable(type: Image.self)
+                }
+            }
         }
     }
     
@@ -85,9 +93,8 @@ struct EventCreation: View {
     }
     
     private var pictureButton: some View {
-        Button {
-            
-        } label: {
+        PhotosPicker(selection: $pickerItem, matching: .images,
+                     label: {
             HStack(alignment: .center) {
                 Image(systemName: "paperclip")
                     .rotationEffect(Angle(degrees: -45))
@@ -95,8 +102,25 @@ struct EventCreation: View {
             }
             .frame(width: 52, height: 52)
             .background(.red, in: RoundedRectangle(cornerRadius: 12))
+        })
+    }
+    
+    private var validateButton: some View {
+        Button {
+            
+        } label: {
+            HStack(alignment: .center) {
+                Text("Validate")
+                    .foregroundStyle(.white)
+            }
+            .frame(width: 358, height: 52)
+            .background(.red)
         }
     }
+}
+
+private extension CGFloat {
+    static let topPadding: CGFloat = 8
 }
 
 #Preview {

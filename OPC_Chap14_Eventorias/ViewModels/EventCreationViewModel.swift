@@ -7,6 +7,7 @@
 
 import Foundation
 import MapKit
+import FirebaseStorage
 
 @Observable class EventCreationViewModel {
     var title: String = ""
@@ -15,6 +16,7 @@ import MapKit
     var time: String = ""
     var address: String = ""
     var addressEnteredRequested: MKMapItem?
+    var imageName: String = ""
     
     private func turnAddressToLocation() async {
         if let request = MKGeocodingRequest(addressString: address) {
@@ -34,6 +36,17 @@ import MapKit
         df.dateFormat = "yy-MM-dd HH:mm"
         return df.date(from: date + " " + time)
     }
+    
+//    private func exportImage() {
+//        //        var data: Data = 
+//        let imageRef = Storage.storage().reference().child("images/\(imageName).jpg")
+//        let uploadTask = imageRef.putData(data, metadata: nil) { (metadata, error) in
+//            guard let metadata = metadata else {
+//                // Uh-oh, an error occurred!
+//                return
+//            }
+//        }
+//    }
 }
 
 
