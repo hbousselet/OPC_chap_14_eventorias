@@ -9,11 +9,11 @@ import Foundation
 import FirebaseCore
 import FirebaseFirestore
 
-struct User: Codable {
-    let name: String
-    let email: String
+struct User: Codable, Equatable, Hashable {
+    var name: String
+    var email: String
     let icon: URL?
-    let notification: Bool
+    var notification: Bool
 }
 
 extension User {

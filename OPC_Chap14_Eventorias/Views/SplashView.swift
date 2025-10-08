@@ -14,7 +14,7 @@ struct SplashView: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            Color.black.edgesIgnoringSafeArea(.all)
+            Color.customGray.edgesIgnoringSafeArea(.all)
             VStack {
                 Image("logo_eventorias")
                     .resizable()

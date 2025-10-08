@@ -61,6 +61,34 @@ struct CustomPassword: View {
     }
 }
 
+struct CustoTextfield: View {
+    var title: String
+    var introduction: String
+    var isEditable: Bool = true
+    let keyboardType: UIKeyboardType
+    @Binding var promptValue: String
+    let size: CGSize
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(title)
+                .font(.system(size: 12, weight: .light))
+            TextField(introduction, text: $promptValue)
+                .font(.system(size: 16, weight: .regular))
+                .autocorrectionDisabled(true)
+                .textInputAutocapitalization(.never)
+                .keyboardType(keyboardType)
+                .onSubmit {
+                }
+        }
+        .padding(.top, 8)
+        .padding(.bottom, 10)
+        .padding(.leading, 16)
+        .frame(width: size.width, height: size.height)
+        .background(.gray)
+    }
+}
+
 extension Binding where Value == Bool {
     var not: Binding<Bool> {
         Binding<Bool>(
@@ -68,4 +96,8 @@ extension Binding where Value == Bool {
             set: { self.wrappedValue = !$0 }
         )
     }
+}
+
+extension Color {
+    static let customGray = Color(UIColor.systemGray2)
 }

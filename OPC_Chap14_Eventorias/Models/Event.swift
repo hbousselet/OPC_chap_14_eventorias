@@ -37,7 +37,29 @@ extension Event {
         }
     }
     
+    static func createEvent(event: Event) async throws {
+//        do {
+//            let db = Firestore.firestore()
+//            try await db.collection("Event").addDocument(data: <#T##[String : Any]#>)
+//        } catch {
+//            print("Error adding document: \(error)")
+//            throw error
+//        }
+    }
+    
     func convert() -> EventModel {
         EventModel(from: self)
+    }
+}
+
+extension Event {
+    public init(from eventModel: EventModel) {
+        self.init(identifier: nil,
+                  address: GeoPoint(latitude: eventModel.address.latitude, longitude: eventModel.address.longitude),
+                  date: eventModel.date,
+                  description: eventModel.description,
+                  name: eventModel.name,
+                  image: "",
+                  user: eventModel.profil?.name) // ça ne va pas
     }
 }

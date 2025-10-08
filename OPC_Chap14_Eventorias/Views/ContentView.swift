@@ -13,7 +13,7 @@ struct ContentView: View {
     @State private var firebaseAuth: AuthFirebase = AuthFirebase()
 
     var body: some View {
-        NavigationStack(path: $navPath) {
+//        NavigationStack(path: $navPath) {
             if firebaseAuth.isAuthenticated {
                 Home(onLogout: {
                     navPath = NavigationPath()
@@ -22,7 +22,7 @@ struct ContentView: View {
             } else {
                 SplashView()
             }
-        }
+//        }
     }
 }
 

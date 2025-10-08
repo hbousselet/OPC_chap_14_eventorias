@@ -10,22 +10,32 @@ import SwiftUI
 struct EventsList: View {
     @Environment(EventsViewModel.self) private var viewModel
     
+    @State var presentEventCreationView: Bool = false
+    
     var body: some View {
         ZStack(alignment: .top) {
             GeometryReader { geometry in
                 ZStack(alignment: .bottomTrailing) {
                     addEventButton()
                         .zIndex(2)
-                    Color.black.ignoresSafeArea(.all)
+                    Color.customGray.ignoresSafeArea(.all)
                     ScrollView {
                         VStack(alignment: .leading) {
                             CustomTextField(viewModel: viewModel)
                             sortingCapsule()
-                            ForEach(viewModel.events, id: \.id) { event in
-                                eventElement(event, with: geometry.size)
-                                    .frame(width: geometry.size.width * 0.9, height: 80)
+                            if viewModel.events.isEmpty {
+                                loadingView(width: geometry.size.width * 0.9, height: 80)
+                            } else { ForEach(viewModel.events, id: \.id) { event in
+                                NavigationLink(destination: {
+                                    EventDetails(event: event)
+                                        .environment(viewModel)
+                                }, label: {
+                                    eventElement(event, with: geometry.size)
+                                        .frame(width: geometry.size.width * 0.9, height: 80)
+                                })
                             }
-                            .padding(.top, 8)
+                            .padding(.top, 4)
+                            }
                         }
                         .padding(.horizontal, 16)
                     }
@@ -33,15 +43,37 @@ struct EventsList: View {
                 }
             }
         }
+        .popover(isPresented: $presentEventCreationView) {
+            EventCreation()
+                .environment(viewModel)
+        }
         .navigationBarBackButtonHidden(true)
-        .task {
-            await viewModel.fetchEvents()
+    }
+    
+    private func loadingView(width: CGFloat, height: CGFloat) -> some View {
+        ZStack(alignment: .center) {
+            ProgressView()
+                .tint(.red)
+                .scaleEffect(4.0)
+                .offset(y: -60)
+                .zIndex(2)
+            VStack {
+                ForEach(0..<10) { _ in
+                    RoundedRectangle(cornerRadius: 12)
+                        .foregroundStyle(.gray)
+                        .background(.gray, in: RoundedRectangle(cornerRadius: 12))
+                        .padding(.top, 4)
+                        .frame(width: width,height: height)
+                }
+            }
+            .zIndex(1)
         }
     }
+
     
     private func addEventButton() -> some View {
         Button {
-            
+            presentEventCreationView.toggle()
         } label: {
             RoundedRectangle(cornerRadius: 12)
                 .frame(width: 56, height: 56)
@@ -57,7 +89,9 @@ struct EventsList: View {
     
     private func eventElement(_ event: EventModel, with size: CGSize) -> some View {
         HStack {
-            image(with: event.profil?.icon, size: CGSize(width: 40.0, height: 40.0))
+//            image(with: event.profil?.icon, size: CGSize(width: 40.0, height: 40.0))
+            imageInCached(name: event.profil?.email ?? "",
+                          size: CGSize(width: 40.0, height: 40.0))
                 .clipShape(.circle)
                 .padding(.leading, 16)
                 .padding(.vertical, 20)
@@ -72,7 +106,9 @@ struct EventsList: View {
             .padding(.vertical, 16)
             .padding(.horizontal)
             Spacer()
-            image(with: event.image, size: CGSize(width: 136.0, height: 80.0))
+//            image(with: event.image, size: CGSize(width: 136.0, height: 80.0))
+            imageInCached(name: event.name,
+                          size: CGSize(width: 136.0, height: 80.0))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .frame(width: size.width * 0.9, height: 80)
@@ -118,10 +154,14 @@ struct EventsList: View {
                 }
             }
         }
-                   .onAppear {
-                       print("url: \(String(describing: url))")
-
-                   }
+    }
+    
+    private func imageInCached(name: String, size: CGSize) -> some View {
+        Image(uiImage: viewModel.getImage(name: name))
+            .resizable()
+            .scaledToFill()
+            .frame(width: size.width, height: size.height)
+            .clipped()
     }
 }
 

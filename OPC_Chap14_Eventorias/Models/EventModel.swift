@@ -11,17 +11,22 @@ import FirebaseCore
 import FirebaseFirestore
 
 
-class EventModel: Identifiable {
+struct EventModel: Identifiable, Equatable, Hashable {
+    static func == (lhs: EventModel, rhs: EventModel) -> Bool {
+        return lhs.id == rhs.id && lhs.name == rhs.name
+    }
+    
     let id: UUID
     let name: String
     let description: String
     let date: Date
     let user: String? // afin de choper la photoURL
-    let address: Address?
+    let address: Address
     let image: URL?
     var profil: User?
     
-    init(id: UUID, name: String, description: String, date: Date, user: String?, address: Address?, image: URL?, profil: User? = nil) {
+
+    init(id: UUID, name: String, description: String, date: Date, user: String?, address: Address, image: URL?, profil: User? = nil) {
         self.id = id
         self.name = name
         self.description = description
@@ -37,14 +42,14 @@ class EventModel: Identifiable {
     
 }
 
-public struct Address: Codable {
+public struct Address: Codable, Hashable, Equatable {
     let latitude: Double
     let longitude: Double
 }
 
 
 extension EventModel {
-    convenience init(from event: Event) {
+    init(from event: Event) {
         self.init(id: UUID(),
                   name: event.name,
                   description: event.description,
