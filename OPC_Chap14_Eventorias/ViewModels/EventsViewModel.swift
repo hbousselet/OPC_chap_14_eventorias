@@ -10,6 +10,7 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
+import FirebaseStorage
 import CoreLocation
 import UIKit
 
@@ -83,6 +84,22 @@ class ImageLoader {
         } catch {
             currentState = .error
             print("error : \(error)")
+        }
+    }
+    
+    func downloadImageInStorage(from path: String, with name: String) {
+        let imageRef = Storage.storage().reference().child("\(path).jpg")
+        
+        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+        imageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+            if let error = error {
+                // Uh-oh, an error occurred!
+                print("Error mate => \(error)")
+            } else {
+                guard let data,
+                      let uiImage = UIImage(data: data) else { return }
+                self.setImage(uiImage, forKey: name)
+            }
         }
     }
 }
