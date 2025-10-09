@@ -8,6 +8,7 @@
 import Foundation
 import MapKit
 import FirebaseStorage
+import SwiftUI
 
 @Observable class EventCreationViewModel {
     var title: String = ""
@@ -17,6 +18,7 @@ import FirebaseStorage
     var address: String = ""
     var addressEnteredRequested: MKMapItem?
     var imageName: String = ""
+    var selectedImage: Data?
     
     private func turnAddressToLocation() async {
         if let request = MKGeocodingRequest(addressString: address) {
@@ -37,16 +39,17 @@ import FirebaseStorage
         return df.date(from: date + " " + time)
     }
     
-//    private func exportImage() {
-//        //        var data: Data = 
-//        let imageRef = Storage.storage().reference().child("images/\(imageName).jpg")
-//        let uploadTask = imageRef.putData(data, metadata: nil) { (metadata, error) in
-//            guard let metadata = metadata else {
-//                // Uh-oh, an error occurred!
-//                return
-//            }
-//        }
-//    }
+    func exportImage() {
+        guard let selectedImage else { return }
+        imageName = "test"
+        let imageRef = Storage.storage().reference().child("images/\(imageName).jpg")
+        let uploadTask = imageRef.putData(selectedImage, metadata: nil) { (metadata, error) in
+            guard let metadata = metadata else {
+                print(error)
+                return
+            }
+        }
+    }
 }
 
 

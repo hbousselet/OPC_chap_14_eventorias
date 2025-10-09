@@ -43,10 +43,6 @@ struct SplashView: View {
             SignIn()
                 .environment(firebaseAuth)
         }
-        .navigationDestination(isPresented: $firebaseAuth.isAuthenticated ) {
-            Home()
-                .environment(firebaseAuth)
-        }
         .onAppear {
             print("Hello firebase : \(firebaseAuth.isAuthenticated)")
         }

@@ -12,7 +12,7 @@ struct EventCreation: View {
     @State private var viewModel: EventCreationViewModel = EventCreationViewModel()
     
     @State private var pickerItem: PhotosPickerItem?
-    @State private var selectedImage: Image?
+    @State private var selectedImageData: Data?
         
     var body: some View {
         //please remove the navigationStack, only required for thee preview
@@ -73,7 +73,8 @@ struct EventCreation: View {
             }
             .onChange(of: pickerItem) {
                 Task {
-                    selectedImage = try await pickerItem?.loadTransferable(type: Image.self)
+                    viewModel.selectedImage = try await pickerItem?.loadTransferable(type: Data.self)
+                    viewModel.exportImage()
                 }
             }
         }

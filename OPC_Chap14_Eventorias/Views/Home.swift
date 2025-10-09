@@ -13,7 +13,6 @@ struct Home: View {
     
     @State private var eventViewModel: EventsViewModel = EventsViewModel(event: [])
     @State private var userViewModel: UserViewModel = UserViewModel()
-    var onLogout: () -> Void = { }
     
     var body: some View {
         TabView(selection: $selectedTabIndex) {

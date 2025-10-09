@@ -9,7 +9,8 @@ import SwiftUI
 
 struct EventsList: View {
     @Environment(EventsViewModel.self) private var viewModel
-    
+    @Environment(AuthFirebase.self) private var firebase
+
     @State var presentEventCreationView: Bool = false
     
     var body: some View {
@@ -48,6 +49,15 @@ struct EventsList: View {
                 .environment(viewModel)
         }
         .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    firebase.logout()
+                } label: {
+                    Text("Deconexion")
+                }
+            }
+        }
     }
     
     private func loadingView(width: CGFloat, height: CGFloat) -> some View {
