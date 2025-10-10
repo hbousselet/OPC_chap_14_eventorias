@@ -24,7 +24,7 @@ struct EventDetails: View {
                 VStack(alignment: .leading) {
                     Image(uiImage: viewModel.getImage(name: event.image))
                         .resizable()
-                        .scaledToFill()
+                        .scaledToFit()
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .frame(width: 358, height: 354)
                     dateInfo

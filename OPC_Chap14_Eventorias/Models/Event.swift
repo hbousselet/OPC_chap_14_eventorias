@@ -15,7 +15,7 @@ struct Event: Codable {
     let date: Date
     let description: String
     let name: String
-    let image: String
+    let image: String?
     let user: String?
 }
 
@@ -35,16 +35,6 @@ extension Event {
             print("Error getting documents: \(error)")
             throw error
         }
-    }
-    
-    static func createEvent(event: Event) async throws {
-//        do {
-//            let db = Firestore.firestore()
-//            try await db.collection("Event").addDocument(data: <#T##[String : Any]#>)
-//        } catch {
-//            print("Error adding document: \(error)")
-//            throw error
-//        }
     }
     
     func convert() -> EventModel {

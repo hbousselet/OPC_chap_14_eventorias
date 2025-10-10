@@ -57,7 +57,7 @@ extension EventModel {
                   user: event.user,
                   address: Address(latitude: event.address?.latitude ?? EventModel.defaultLat,
                                    longitude: event.address?.longitude ?? EventModel.defaultLong),
-                  image: event.image
+                  image: event.image ?? ""
                     )
     }
 }

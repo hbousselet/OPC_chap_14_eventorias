@@ -9,73 +9,75 @@ import SwiftUI
 import PhotosUI
 
 struct EventCreation: View {
+    @Binding var isPresented: Bool
     @State private var viewModel: EventCreationViewModel = EventCreationViewModel()
     
     @State private var pickerItem: PhotosPickerItem?
     @State private var selectedImageData: Data?
         
     var body: some View {
-        //please remove the navigationStack, only required for thee preview
-        NavigationStack {
-            ZStack(alignment: .top) {
-                Color.customGray
-                    .ignoresSafeArea(.all)
-                ScrollView {
-                    VStack {
-                        CustoTextfield(title: "Title",
-                                       introduction: "New event",
+        ZStack(alignment: .top) {
+            Color.customGray
+                .ignoresSafeArea(.all)
+            ScrollView {
+                VStack {
+                    CustoTextfield(title: "Title",
+                                   introduction: "New event",
+                                   keyboardType: .default,
+                                   promptValue: $viewModel.title,
+                                   size: CGSize(width: 358, height: 56))
+                    .padding(.top, .topPadding)
+                    CustoTextfield(title: "Description",
+                                   introduction: "Tap here to enter your description",
+                                   keyboardType: .default,
+                                   promptValue: $viewModel.description,
+                                   size: CGSize(width: 358, height: 56))
+                    .padding(.top, .topPadding)
+                    HStack(alignment: .center) {
+                        CustoTextfield(title: "Date",
+                                       introduction: "MM/DD/YYYY",
                                        keyboardType: .default,
-                                       promptValue: $viewModel.title,
-                                       size: CGSize(width: 358, height: 56))
-                        .padding(.top, .topPadding)
-                        CustoTextfield(title: "Description",
-                                       introduction: "Tap here to enter your description",
+                                       promptValue: $viewModel.date,
+                                       size: CGSize(width: 176, height: 56))
+                        CustoTextfield(title: "Time",
+                                       introduction: "HH : MM",
                                        keyboardType: .default,
-                                       promptValue: $viewModel.description,
-                                       size: CGSize(width: 358, height: 56))
-                        .padding(.top, .topPadding)
-                        HStack(alignment: .center) {
-                            CustoTextfield(title: "Date",
-                                           introduction: "MM/DD/YYYY",
-                                           keyboardType: .default,
-                                           promptValue: $viewModel.date,
-                                           size: CGSize(width: 176, height: 56))
-                            CustoTextfield(title: "Time",
-                                           introduction: "HH : MM",
-                                           keyboardType: .default,
-                                           promptValue: $viewModel.time,
-                                           size: CGSize(width: 176, height: 56))
-                        }
-                        .padding(.top, .topPadding)
-                        CustoTextfield(title: "Address",
-                                       introduction: "Enter full address",
-                                       keyboardType: .default,
-                                       promptValue: $viewModel.address,
-                                       size: CGSize(width: 358, height: 56))
-                        .padding(.top, .topPadding)
-                        HStack(alignment: .center) {
-                            cameraButton
-                            pictureButton
-                        }
-                        .padding(.top, 48)
+                                       promptValue: $viewModel.time,
+                                       size: CGSize(width: 176, height: 56))
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom)
+                    .padding(.top, .topPadding)
+                    CustoTextfield(title: "Address",
+                                   introduction: "Enter full address",
+                                   keyboardType: .default,
+                                   promptValue: $viewModel.address,
+                                   size: CGSize(width: 358, height: 56))
+                    .padding(.top, .topPadding)
+                    HStack(alignment: .center) {
+                        cameraButton
+                        pictureButton
+                    }
+                    .padding(.top, 48)
                 }
-                .padding(.top, 180)
-                .ignoresSafeArea(edges: .top)
+                .padding(.horizontal, 16)
+                .padding(.bottom)
             }
-            .navigationTitle("Creation of an Event")
-            .safeAreaInset(edge: .bottom) {
-                validateButton
+            .padding(.top, 180)
+            .ignoresSafeArea(edges: .top)
+        }
+        .navigationTitle("Creation of an Event")
+        .safeAreaInset(edge: .bottom) {
+            validateButton
                 .padding(.horizontal, 16)
                 .padding(.bottom, 16)
+        }
+        .onChange(of: pickerItem) {
+            Task {
+                viewModel.selectedImage = try await pickerItem?.loadTransferable(type: Data.self)
             }
-            .onChange(of: pickerItem) {
-                Task {
-                    viewModel.selectedImage = try await pickerItem?.loadTransferable(type: Data.self)
-                    viewModel.exportImage()
-                }
+        }
+        .onChange(of: viewModel.dismiss) { newValue in
+            if newValue == true {
+                isPresented = false
             }
         }
     }
@@ -108,7 +110,9 @@ struct EventCreation: View {
     
     private var validateButton: some View {
         Button {
-            
+            Task {
+                await viewModel.createEvent()
+            }
         } label: {
             HStack(alignment: .center) {
                 Text("Validate")
@@ -122,9 +126,4 @@ struct EventCreation: View {
 
 private extension CGFloat {
     static let topPadding: CGFloat = 8
-}
-
-#Preview {
-//    @Previewable @State var eventsViewModel: EventsViewModel = .init(event: [])
-    EventCreation()
 }

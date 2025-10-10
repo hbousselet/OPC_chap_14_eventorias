@@ -11,7 +11,7 @@ struct EventsList: View {
     @Environment(EventsViewModel.self) private var viewModel
     @Environment(AuthFirebase.self) private var firebase
 
-    @State var presentEventCreationView: Bool = false
+    @State var isNavigating: Bool = false
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -44,8 +44,8 @@ struct EventsList: View {
                 }
             }
         }
-        .popover(isPresented: $presentEventCreationView) {
-            EventCreation()
+        .navigationDestination(isPresented: $isNavigating) {
+            EventCreation(isPresented: $isNavigating)
                 .environment(viewModel)
         }
         .navigationBarBackButtonHidden(true)
@@ -83,7 +83,7 @@ struct EventsList: View {
     
     private func addEventButton() -> some View {
         Button {
-            presentEventCreationView.toggle()
+            isNavigating.toggle()
         } label: {
             RoundedRectangle(cornerRadius: 12)
                 .frame(width: 56, height: 56)
@@ -185,18 +185,3 @@ struct CustomTextField: View {
             .background(.gray, in: .capsule)
     }
 }
-
-//#Preview {
-//    @Previewable @State var eventViewModel: EventsViewModel = EventsViewModel(event: [EventModel(id: UUID(),name: "Sisyphos",
-//                                                                                                 description: "refouler",
-//                                                                                                 date: Date.now,
-//                                                                                                 user: "Terminando",
-//                                                                                                 address: Address(latitude: 48.0, longitude: 12.3),
-//                                                                                                 image: URL(string: "https://img.lemde.fr/2025/09/30/0/0/0/0/994/0/75/0/49de171_ftp-import-images-1-0avesfp6jmif-2025-09-30t133128z-719127529-rc2y0hatqelm-rtrmadp-3-israel-palestinians-jordan-aid.JPG"),
-//                                                                                                 profil: User(name: "Peter", email: "maltSale@gmail.com", icon: "https://img.lemde.fr/2025/09/30/0/0/5346/2673/2000/1000/75/0/a2f2905_ftp-import-images-1-k6spoxbmx1pw-3d5c55f07c40490eb7985fd3b7f43e17-0-faeaf65134ef4ed99a5318b8a7bd354c.jpg", notification: true)), ])
-//
-//    EventsList()
-//        .environment(eventViewModel)
-//    
-//}
-

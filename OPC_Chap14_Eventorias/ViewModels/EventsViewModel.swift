@@ -98,7 +98,7 @@ class ImageLoader {
             guard let uiImage = UIImage(data: imageData) else { return }
             self.setImage(uiImage, forKey: name)
         } catch {
-            print("error")
+            print("error can't load image: \(error)")
         }
         
     }
