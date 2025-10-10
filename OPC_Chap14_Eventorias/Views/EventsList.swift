@@ -117,7 +117,7 @@ struct EventsList: View {
             .padding(.horizontal)
             Spacer()
 //            image(with: event.image, size: CGSize(width: 136.0, height: 80.0))
-            imageInCached(name: event.name,
+            imageInCached(name: event.image,
                           size: CGSize(width: 136.0, height: 80.0))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }

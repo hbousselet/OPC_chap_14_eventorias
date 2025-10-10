@@ -41,8 +41,7 @@ import SwiftUI
     
     func exportImage() {
         guard let selectedImage else { return }
-        imageName = "test"
-        let imageRef = Storage.storage().reference().child("images/\(imageName).jpg")
+        let imageRef = Storage.storage().reference().child("images/\(title.removeSpacesAndLowercase()).jpg")
         let uploadTask = imageRef.putData(selectedImage, metadata: nil) { (metadata, error) in
             guard let metadata = metadata else {
                 print(error)

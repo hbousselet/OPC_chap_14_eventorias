@@ -22,11 +22,11 @@ struct EventModel: Identifiable, Equatable, Hashable {
     let date: Date
     let user: String? // afin de choper la photoURL
     let address: Address
-    let image: URL?
+    let image: String
     var profil: User?
     
 
-    init(id: UUID, name: String, description: String, date: Date, user: String?, address: Address, image: URL?, profil: User? = nil) {
+    init(id: UUID, name: String, description: String, date: Date, user: String?, address: Address, image: String, profil: User? = nil) {
         self.id = id
         self.name = name
         self.description = description
@@ -57,7 +57,7 @@ extension EventModel {
                   user: event.user,
                   address: Address(latitude: event.address?.latitude ?? EventModel.defaultLat,
                                    longitude: event.address?.longitude ?? EventModel.defaultLong),
-                  image: URL(string: event.image ?? "")
+                  image: event.image
                     )
     }
 }

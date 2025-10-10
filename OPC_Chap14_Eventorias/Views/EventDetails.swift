@@ -22,7 +22,7 @@ struct EventDetails: View {
             Color.customGray.ignoresSafeArea(.all)
             ScrollView {
                 VStack(alignment: .leading) {
-                    Image(uiImage: viewModel.getImage(name: event.name))
+                    Image(uiImage: viewModel.getImage(name: event.image))
                         .resizable()
                         .scaledToFill()
                         .clipShape(RoundedRectangle(cornerRadius: 12))

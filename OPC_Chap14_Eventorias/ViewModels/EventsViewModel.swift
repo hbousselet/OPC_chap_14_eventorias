@@ -31,7 +31,7 @@ import UIKit
             var convertedEvents: [EventModel] = firestoreEvents.compactMap { $0.convert() }
             
             for (index, event) in convertedEvents.enumerated() {
-                await imageLoader.downloadImage(from: event.image, with: event.name)
+                await imageLoader.downloadImageInStorage(from: event.image, with: event.name.removeSpacesAndLowercase())
                 guard let userid = event.user else { continue }
                 let user = try await User.fetchUser(userid)
                 convertedEvents[index].profil = user
@@ -44,9 +44,12 @@ import UIKit
     }
     
     func getImage(name: String) -> UIImage {
+        print("get image for : \(name)")
         if let cachedImage = ImageLoader.shared.getImage(forKey: name) {
+            print("could get the image")
             return cachedImage
         }
+        print("not able to get the image")
         return UIImage(named: "placeholder-rectangle")!
     }
     
@@ -66,6 +69,7 @@ class ImageLoader {
     }
     
     func setImage(_ image: UIImage, forKey key: String) {
+        print("### we store image name : \(key)")
         cache.setObject(image, forKey: key as NSString)
     }
     
@@ -87,21 +91,18 @@ class ImageLoader {
         }
     }
     
-    func downloadImageInStorage(from path: String, with name: String) {
-        let imageRef = Storage.storage().reference().child("\(path).jpg")
-        
-        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
-        imageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
-            if let error = error {
-                // Uh-oh, an error occurred!
-                print("Error mate => \(error)")
-            } else {
-                guard let data,
-                      let uiImage = UIImage(data: data) else { return }
-                self.setImage(uiImage, forKey: name)
-            }
+    func downloadImageInStorage(from path: String, with name: String) async {
+        let imageRef = Storage.storage().reference().child("images/\(path).jpg")
+        do {
+            let imageData = try await imageRef.data(maxSize: 1 * 1024 * 1024)
+            guard let uiImage = UIImage(data: imageData) else { return }
+            self.setImage(uiImage, forKey: name)
+        } catch {
+            print("error")
         }
+        
     }
+    
 }
 
 enum ImageState {
@@ -111,3 +112,9 @@ enum ImageState {
     case error
 }
     
+extension String {
+    func removeSpacesAndLowercase() -> String {
+        return self.replacingOccurrences(of: " ", with: "")
+                   .lowercased()
+    }
+}

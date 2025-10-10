@@ -15,7 +15,7 @@ struct Event: Codable {
     let date: Date
     let description: String
     let name: String
-    let image: String?
+    let image: String
     let user: String?
 }
 
