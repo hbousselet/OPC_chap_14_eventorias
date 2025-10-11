@@ -17,6 +17,7 @@ struct Event: Codable {
     let name: String
     let image: String?
     let user: String?
+    let type: EventType
 }
 
 extension Event {
@@ -42,19 +43,8 @@ extension Event {
     }
 }
 
-extension Event {
-    public init(from eventModel: EventModel) {
-        self.init(identifier: nil,
-                  address: GeoPoint(latitude: eventModel.address.latitude, longitude: eventModel.address.longitude),
-                  date: eventModel.date,
-                  description: eventModel.description,
-                  name: eventModel.name,
-                  image: "",
-                  user: eventModel.profil?.name) // ça ne va pas
-    }
-}
-
-enum EventType: Decodable {
+enum EventType: String, Codable, Hashable, Identifiable, CaseIterable {
+    var id: Self { self }
     case restaurant
     case bar
     case museum
@@ -64,7 +54,6 @@ enum EventType: Decodable {
     case other
     case conference
     case art
-    case unknown(value: String)
     
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
@@ -80,7 +69,8 @@ enum EventType: Decodable {
         case "conference": self = .conference
         case "art": self = .art
         default:
-            self = .unknown(value: type ?? "unknown")
+            self = .other
         }
     }
 }
+

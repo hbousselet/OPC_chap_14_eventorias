@@ -24,6 +24,7 @@ import SwiftUI
     var alertIsPresented: Bool = false
     var alert: EventCreationAlert = .none
     var dismiss: Bool = false
+    var type: EventType?
     
     var getCurrentUserId: String {
         Auth.auth().currentUser?.uid ?? ""

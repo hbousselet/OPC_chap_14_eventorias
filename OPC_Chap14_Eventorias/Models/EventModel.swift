@@ -24,9 +24,10 @@ struct EventModel: Identifiable, Equatable, Hashable {
     let address: Address
     let image: String
     var profil: User?
+    let type: EventType
     
 
-    init(id: UUID, name: String, description: String, date: Date, user: String?, address: Address, image: String, profil: User? = nil) {
+    init(id: UUID, name: String, description: String, date: Date, user: String?, address: Address, image: String, profil: User? = nil, type: EventType) {
         self.id = id
         self.name = name
         self.description = description
@@ -35,6 +36,7 @@ struct EventModel: Identifiable, Equatable, Hashable {
         self.address = address
         self.image = image
         self.profil = profil
+        self.type = type
     }
     
     static let defaultLat: Double = 48.856019
@@ -57,7 +59,8 @@ extension EventModel {
                   user: event.user,
                   address: Address(latitude: event.address?.latitude ?? EventModel.defaultLat,
                                    longitude: event.address?.longitude ?? EventModel.defaultLong),
-                  image: event.image ?? ""
+                  image: event.image ?? "",
+                  type: event.type
                     )
     }
 }

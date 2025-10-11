@@ -14,7 +14,7 @@ struct EventCreation: View {
     
     @State private var pickerItem: PhotosPickerItem?
     @State private var selectedImageData: Data?
-        
+    @State private var selectedtype: EventType?
     var body: some View {
         ZStack(alignment: .top) {
             Color.customGray
@@ -51,6 +51,16 @@ struct EventCreation: View {
                                    keyboardType: .default,
                                    promptValue: $viewModel.address,
                                    size: CGSize(width: 358, height: 56))
+                    .padding(.top, .topPadding)
+                    Picker("Event type", selection: $viewModel.type) {
+                        ForEach(EventType.allCases) { type in
+                            Text(type.rawValue)
+                                .tag(type.id)
+                        }
+                    }
+                    .pickerStyle(.inline)
+                    .frame(width: 358, height: 56)
+                    .background(.gray)
                     .padding(.top, .topPadding)
                     HStack(alignment: .center) {
                         cameraButton
