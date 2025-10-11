@@ -53,3 +53,34 @@ extension Event {
                   user: eventModel.profil?.name) // ça ne va pas
     }
 }
+
+enum EventType: Decodable {
+    case restaurant
+    case bar
+    case museum
+    case club
+    case festival
+    case sport
+    case other
+    case conference
+    case art
+    case unknown(value: String)
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let type = try? container.decode(String.self)
+        switch type {
+        case "restaurant": self = .restaurant
+        case "bar": self = .bar
+        case "museum": self = .museum
+        case "club": self = .club
+        case "festival": self = .festival
+        case "sport": self = .sport
+        case "other": self = .other
+        case "conference": self = .conference
+        case "art": self = .art
+        default:
+            self = .unknown(value: type ?? "unknown")
+        }
+    }
+}
