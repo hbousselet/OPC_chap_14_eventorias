@@ -15,27 +15,36 @@ struct EventsList: View {
     
     var body: some View {
         ZStack(alignment: .top) {
+            Color.customGray.ignoresSafeArea(.all)
             GeometryReader { geometry in
                 ZStack(alignment: .bottomTrailing) {
-                    addEventButton()
-                        .zIndex(2)
-                    Color.customGray.ignoresSafeArea(.all)
+                    if !viewModel.alertIsPresented {
+                        addEventButton()
+                            .zIndex(2)
+                    }
                     ScrollView {
                         VStack(alignment: .leading) {
                             CustomTextField(viewModel: viewModel)
                             sortingCapsule()
-                            if viewModel.events.isEmpty {
-                                loadingView(width: geometry.size.width * 0.9, height: 80)
-                            } else { ForEach(viewModel.events, id: \.id) { event in
-                                NavigationLink(destination: {
-                                    EventDetails(event: event)
-                                        .environment(viewModel)
-                                }, label: {
-                                    eventElement(event, with: geometry.size)
-                                        .frame(width: geometry.size.width * 0.9, height: 80)
-                                })
-                            }
-                            .padding(.top, 4)
+                            if viewModel.alertIsPresented {
+                                alertView
+                                    .padding(.top, 183)
+                                    .padding(.horizontal)
+                            } else {
+                                if viewModel.events.isEmpty {
+                                    loadingView(width: geometry.size.width * 0.9, height: 80)
+                                } else {
+                                    ForEach(viewModel.events, id: \.id) { event in
+                                        NavigationLink(destination: {
+                                            EventDetails(event: event)
+                                                .environment(viewModel)
+                                        }, label: {
+                                            eventElement(event, with: geometry.size)
+                                                .frame(width: geometry.size.width * 0.9, height: 80)
+                                        })
+                                    }
+                                    .padding(.top, 4)
+                                }
                             }
                         }
                         .padding(.horizontal, 16)
@@ -56,6 +65,39 @@ struct EventsList: View {
                 } label: {
                     Text("Deconexion")
                 }
+            }
+        }
+    }
+    
+    private var alertView: some View {
+        VStack(alignment: .center) {
+            Image(systemName: "exclamationmark")
+                .clipped()
+                .frame(width: 64, height: 64)
+                .foregroundStyle(.white)
+                .background(.gray)
+                .clipShape(Circle())
+            Text("Error")
+                .padding(.top, 24)
+                .font(.system(size: 20, weight: .semibold))
+            Text(viewModel.alert?.errorDescription ?? "An error has occured, please try again later")
+                .font(.system(size: 16, weight: .regular))
+                .lineLimit(2)
+                .padding(.top, 5)
+            Button {
+                Task {
+                    await viewModel.fetchEvents()
+                }
+            } label: {
+                HStack(alignment: .center) {
+                    Text("Try again")
+                        .foregroundStyle(.white)
+                        .font(.system(size: 16, weight: .semibold))
+                }
+                .frame(width: 159, height: 40)
+                .background(.red, in: RoundedRectangle(cornerRadius: 4))
+                .padding(.horizontal)
+                .padding(.top, 35)
             }
         }
     }
