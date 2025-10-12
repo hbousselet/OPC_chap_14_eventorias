@@ -59,7 +59,7 @@ import SwiftUI
         do {
             await turnAddressToLocation()
             try await uploadEvent(with: date)
-            await exportImagev2()
+            await exportImage()
         } catch {
             print("Error blabla: \(error)")
         }
@@ -107,7 +107,7 @@ import SwiftUI
         return df.date(from: date + " " + time)
     }
     
-    private func exportImagev2() async {
+    private func exportImage() async {
         guard let selectedImage,
         let uiImage = UIImage(data: selectedImage),
         let compressedData = uiImage.jpegData(compressionQuality: 0.5) else { return }

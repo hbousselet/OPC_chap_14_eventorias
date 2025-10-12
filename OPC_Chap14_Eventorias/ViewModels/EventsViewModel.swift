@@ -61,7 +61,6 @@ import UIKit
 class ImageLoader {
     static let shared = ImageLoader()
     
-    var currentState: ImageState = .initialisation
     private let cache = NSCache<NSString, UIImage>()
     
     private init() {}
@@ -77,19 +76,15 @@ class ImageLoader {
     }
     
     func downloadImage(from url: URL?, with name: String) async {
-        currentState = .loading
         guard let url else { return }
         do {
             let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
             let response = try await URLSession(configuration: .default).data(for: request)
             let uiImage = UIImage(data: response.0)
             guard let uiImage else {
-                currentState = .error
                 return }
-            currentState = .loaded(uiImage)
             setImage(uiImage, forKey: name)
         } catch {
-            currentState = .error
             print("error : \(error)")
         }
     }
@@ -106,13 +101,6 @@ class ImageLoader {
         
     }
     
-}
-
-enum ImageState {
-    case initialisation
-    case loading
-    case loaded(UIImage)
-    case error
 }
     
 extension String {
