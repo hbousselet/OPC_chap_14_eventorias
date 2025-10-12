@@ -18,15 +18,15 @@ struct EventsList: View {
             Color.customGray.ignoresSafeArea(.all)
             GeometryReader { geometry in
                 ZStack(alignment: .bottomTrailing) {
-                    if !viewModel.alertIsPresented {
+                    if !viewModel.alertIsPresented, !viewModel.events.isEmpty {
                         addEventButton()
                             .zIndex(2)
                     }
                     ScrollView {
                         VStack(alignment: .leading) {
-                            CustomTextField(viewModel: viewModel)
-                            sortingCapsule()
                             if viewModel.alertIsPresented {
+                                CustomTextField(viewModel: viewModel)
+                                sortingCapsule()
                                 alertView
                                     .padding(.top, 183)
                                     .padding(.horizontal)
@@ -34,6 +34,8 @@ struct EventsList: View {
                                 if viewModel.events.isEmpty {
                                     loadingView(width: geometry.size.width * 0.9, height: 80)
                                 } else {
+                                    CustomTextField(viewModel: viewModel)
+                                    sortingCapsule()
                                     ForEach(viewModel.events, id: \.id) { event in
                                         NavigationLink(destination: {
                                             EventDetails(event: event)
@@ -59,13 +61,13 @@ struct EventsList: View {
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    firebase.logout()
-                } label: {
-                    Text("Deconexion")
-                }
-            }
+//            ToolbarItem(placement: .topBarTrailing) {
+//                Button {
+//                    firebase.logout()
+//                } label: {
+//                    Text("Deconexion")
+//                }
+//            }
         }
     }
     
@@ -105,15 +107,15 @@ struct EventsList: View {
     private func loadingView(width: CGFloat, height: CGFloat) -> some View {
         ZStack(alignment: .center) {
             ProgressView()
-                .tint(.red)
+                .tint(.white)
                 .scaleEffect(4.0)
                 .offset(y: -60)
                 .zIndex(2)
             VStack {
                 ForEach(0..<10) { _ in
                     RoundedRectangle(cornerRadius: 12)
-                        .foregroundStyle(.gray)
-                        .background(.gray, in: RoundedRectangle(cornerRadius: 12))
+                        .foregroundStyle(.clear)
+                        .background(.clear)
                         .padding(.top, 4)
                         .frame(width: width,height: height)
                 }

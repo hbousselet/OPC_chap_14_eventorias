@@ -39,10 +39,10 @@ import UIKit
                 convertedEvents[index].profil = user
                 try await imageLoader.downloadImage(from: user.icon, with: user.email)
                 //events ajouté à chaque fois qu'un est fetch
-                events.append(convertedEvents[index])
+//                events.append(convertedEvents[index])
             }
             // events ajoutés à la fin
-//            events = convertedEvents
+            events = convertedEvents
         } catch {
             print("error : \(error)")
             alertIsPresented = true
