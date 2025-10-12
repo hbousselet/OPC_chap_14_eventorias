@@ -72,7 +72,8 @@ import SwiftUI
             "address": GeoPoint(latitude: addressEnteredRequested?.location.coordinate.latitude ?? 48.8575, longitude: addressEnteredRequested?.location.coordinate.longitude ?? 2.3514),
             "date": date,
             "user": getCurrentUserId,
-            "image": title.removeSpacesAndLowercase()
+            "image": title.removeSpacesAndLowercase(),
+            "type": type?.rawValue ?? "other"
         ]
         do {
             let db = Firestore.firestore()
@@ -130,16 +131,3 @@ enum EventCreationAlert: String {
     case emptyAddress = "Please enter an address"
     case invalidAddress = "The address you entered was not found. Please try again."
 }
-
-
-
-//func exportImage() {
-//        guard let selectedImage else { return }
-//        let imageRef = Storage.storage().reference().child("images/\(title.removeSpacesAndLowercase()).jpg")
-//        let uploadTask = imageRef.putData(selectedImage, metadata: nil) { (metadata, error) in
-//            guard let metadata = metadata else {
-//                print(error)
-//                return
-//            }
-//        }
-//    }

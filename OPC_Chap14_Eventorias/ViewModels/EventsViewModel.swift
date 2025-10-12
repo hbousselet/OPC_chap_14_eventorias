@@ -36,8 +36,11 @@ import UIKit
                 let user = try await User.fetchUser(userid)
                 convertedEvents[index].profil = user
                 await imageLoader.downloadImage(from: user.icon, with: user.email)
+                //events ajouté à chaque fois qu'un est fetch
+                events.append(convertedEvents[index])
             }
-            events = convertedEvents
+            // events ajoutés à la fin
+//            events = convertedEvents
         } catch {
             print("error : \(error)")
         }
@@ -94,7 +97,7 @@ class ImageLoader {
     func downloadImageInStorage(from path: String, with name: String) async {
         let imageRef = Storage.storage().reference().child("images/\(path).jpg")
         do {
-            let imageData = try await imageRef.data(maxSize: 1 * 1024 * 1024)
+            let imageData = try await imageRef.data(maxSize: 1 * 3024 * 4032)
             guard let uiImage = UIImage(data: imageData) else { return }
             self.setImage(uiImage, forKey: name)
         } catch {
