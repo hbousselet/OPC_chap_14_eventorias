@@ -34,7 +34,7 @@ extension Event {
             
         } catch {
             print("Error getting documents: \(error)")
-            throw error
+            throw EventsAlert.notAbleToFetchEvents(error: error)
         }
     }
     

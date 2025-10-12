@@ -37,17 +37,16 @@ extension User {
             let db = Firestore.firestore()
             let docRef = db.collection("User").document(userId)
 
-            
             let document = try await docRef.getDocument()
             if document.exists {
                 let user = try document.data(as: User.self)
                 return user
             } else {
-                throw CocoaError(.fileReadNoSuchFile) // to be changed
+                throw EventsAlert.userDoesNotExist
             }
         } catch {
             print("Error getting documents: \(error)")
-            throw error
+            throw EventsAlert.notAbleToFetchUser(error: error)
         }
     }
 }
