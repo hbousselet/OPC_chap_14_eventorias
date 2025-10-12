@@ -101,3 +101,10 @@ extension Binding where Value == Bool {
 extension Color {
     static let customGray = Color(UIColor.systemGray2)
 }
+
+extension String {
+    func removeSpacesAndLowercase() -> String {
+        return self.replacingOccurrences(of: " ", with: "")
+                   .lowercased()
+    }
+}
