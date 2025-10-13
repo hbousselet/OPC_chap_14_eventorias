@@ -13,8 +13,9 @@ struct EventCreation: View {
     @State private var viewModel: EventCreationViewModel = EventCreationViewModel()
     
     @State private var pickerItem: PhotosPickerItem?
-    @State private var selectedImageData: Data?
-    @State private var selectedtype: EventType?
+    @State private var showImagePicker = false
+    @State private var selectedImage: UIImage?
+
     var body: some View {
         ZStack(alignment: .top) {
             Color.customGray
@@ -90,11 +91,19 @@ struct EventCreation: View {
                 isPresented = false
             }
         }
+        .sheet(isPresented: $showImagePicker) {
+            ImagePicker(selectedImage: $selectedImage)
+        }
+        .onChange(of: selectedImage, {
+            if let selectedImage {
+                viewModel.selectedImage = selectedImage.jpegData(compressionQuality: 1)
+            }
+        })
     }
     
     private var cameraButton: some View {
         Button {
-            
+            showImagePicker = true
         } label: {
             HStack(alignment: .center) {
                 Image(systemName: "camera")

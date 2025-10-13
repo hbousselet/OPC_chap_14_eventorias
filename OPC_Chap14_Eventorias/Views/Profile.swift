@@ -45,14 +45,14 @@ struct Profile: View {
             .ignoresSafeArea(edges: .top)
         }
         .toolbar {
-//            ToolbarItem(placement: .topBarTrailing) {
-//                Image(uiImage: eventViewModel.getImage(name: viewModel.user.email))
-//                    .resizable()
-//                    .scaledToFill()
-////                    .clipped()
-//                    .frame(width: 48, height: 48)
-//                    .clipShape(Circle())
-//            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Image(uiImage: eventViewModel.getImage(name: viewModel.user.email))
+                    .resizable()
+                    .scaledToFill()
+                    .clipped()
+                    .frame(width: 48, height: 48)
+                    .clipShape(Circle())
+            }
             ToolbarItem(placement: .title) {
                 Text("User profile")
                     .foregroundStyle(.black)

@@ -15,13 +15,17 @@ import CoreLocation
 import UIKit
 
 @Observable class EventsViewModel {
-    var events: [EventModel] = []
+    private(set) var events: [EventModel] = []
     var search: String = ""
     var signOut: Bool = false
     var alertIsPresented: Bool = false
     var alert: EventsAlert? = Optional.none
     
     let imageLoader = ImageLoader.shared
+    
+//    var groupedProducts: [String: [Product]] {
+//        return Dictionary(grouping: products) { $0.category.rawValue }
+//    }
     
     init(event: [EventModel]) {
         self.events = events
