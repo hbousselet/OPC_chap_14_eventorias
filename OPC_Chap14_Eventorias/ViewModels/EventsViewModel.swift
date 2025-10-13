@@ -23,9 +23,13 @@ import UIKit
     
     let imageLoader = ImageLoader.shared
     
-//    var groupedProducts: [String: [Product]] {
-//        return Dictionary(grouping: products) { $0.category.rawValue }
-//    }
+    var searchEvents: [EventModel] {
+        if search.isEmpty {
+            return events
+        } else {
+            return events.filter { $0.type.rawValue.lowercased().contains(search.lowercased()) }
+        }
+    }
     
     init(event: [EventModel]) {
         self.events = events
@@ -43,10 +47,10 @@ import UIKit
                 convertedEvents[index].profil = user
                 try await imageLoader.downloadImage(from: user.icon, with: user.email)
                 //events ajouté à chaque fois qu'un est fetch
-//                events.append(convertedEvents[index])
+                events.append(convertedEvents[index])
             }
             // events ajoutés à la fin
-            events = convertedEvents
+//            events = convertedEvents
         } catch {
             print("error : \(error)")
             alertIsPresented = true

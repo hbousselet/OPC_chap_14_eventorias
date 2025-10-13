@@ -36,7 +36,7 @@ struct EventsList: View {
                                 } else {
                                     CustomTextField(viewModel: viewModel)
                                     sortingCapsule()
-                                    ForEach(viewModel.events, id: \.id) { event in
+                                    ForEach(viewModel.searchEvents, id: \.id) { event in
                                         NavigationLink(destination: {
                                             EventDetails(event: event)
                                                 .environment(viewModel)
