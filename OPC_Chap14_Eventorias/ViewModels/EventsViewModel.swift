@@ -20,14 +20,16 @@ import UIKit
     var signOut: Bool = false
     var alertIsPresented: Bool = false
     var alert: EventsAlert? = Optional.none
+    var sorting: EventsSorting = .none
     
     let imageLoader = ImageLoader.shared
     
-    var searchEvents: [EventModel] {
+    var filteredEvents: [EventModel] {
         if search.isEmpty {
-            return events
+            return events.sortedByDate(by: sorting)
         } else {
-            return events.filter { $0.type.rawValue.lowercased().contains(search.lowercased()) }
+            return events.filter( { $0.type.rawValue.lowercased().contains(search.lowercased()) })
+                .sortedByDate(by: sorting)
         }
     }
     
@@ -67,6 +69,17 @@ import UIKit
         print("not able to get the image")
         return UIImage(named: "placeholder-rectangle")!
     }
+    
+    func sortingHit() {
+        switch sorting {
+        case .none:
+            sorting = .dateDescending
+        case .dateDescending:
+            sorting = .dateAscending
+        case .dateAscending:
+            sorting = .none
+        }
+    }
 }
 
 enum EventsAlert: Error {
@@ -93,4 +106,8 @@ enum EventsAlert: Error {
             return "User does not exist"
         }
     }
+}
+
+enum EventsSorting {
+    case none, dateAscending, dateDescending
 }

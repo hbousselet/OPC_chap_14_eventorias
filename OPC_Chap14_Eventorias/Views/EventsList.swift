@@ -36,7 +36,7 @@ struct EventsList: View {
                                 } else {
                                     CustomTextField(viewModel: viewModel)
                                     sortingCapsule()
-                                    ForEach(viewModel.searchEvents, id: \.id) { event in
+                                    ForEach(viewModel.filteredEvents, id: \.id) { event in
                                         NavigationLink(destination: {
                                             EventDetails(event: event)
                                                 .environment(viewModel)
@@ -172,10 +172,10 @@ struct EventsList: View {
     
     private func sortingCapsule() -> some View {
         Button {
-            // to do
+            viewModel.sortingHit()
         } label: {
             HStack {
-                Image(systemName: "heart")
+                getSortingArrow()
                 Text("Sorting")
             }
             .padding(.horizontal, 15)
@@ -183,6 +183,17 @@ struct EventsList: View {
             .foregroundStyle(.white)
         }
         .background(.gray, in: .capsule)
+    }
+    
+    private func getSortingArrow() -> some View {
+        switch viewModel.sorting {
+        case .dateAscending:
+            Image(systemName: "arrow.up")
+        case .dateDescending:
+            Image(systemName: "arrow.down")
+        default:
+            Image(systemName: "arrow.up.arrow.down")
+        }
     }
     
     @ViewBuilder

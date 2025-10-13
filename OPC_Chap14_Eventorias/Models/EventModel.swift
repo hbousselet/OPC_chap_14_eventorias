@@ -64,3 +64,18 @@ extension EventModel {
                     )
     }
 }
+
+extension [EventModel] {
+    func sortedByDate(by sorting: EventsSorting) -> [EventModel] {
+        self.sorted { before, after in
+            switch sorting {
+            case .none:
+                return false
+            case .dateAscending:
+                return before.date < after.date
+            case .dateDescending:
+                return before.date > after.date
+            }
+        }
+    }
+}
