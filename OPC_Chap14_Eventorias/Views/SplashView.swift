@@ -14,7 +14,7 @@ struct SplashView: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            Color.customGray.edgesIgnoringSafeArea(.all)
+            Color.systemBackground.edgesIgnoringSafeArea(.all)
             VStack {
                 Image("logo_eventorias")
                     .resizable()
@@ -42,9 +42,6 @@ struct SplashView: View {
         .fullScreenCover(isPresented: $presentSignInView) {
             SignIn()
                 .environment(firebaseAuth)
-        }
-        .onAppear {
-            print("Hello firebase : \(firebaseAuth.isAuthenticated)")
         }
     }
 }

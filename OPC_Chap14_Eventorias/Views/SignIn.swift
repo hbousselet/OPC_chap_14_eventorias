@@ -17,55 +17,59 @@ struct SignIn: View {
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
-                Color.gray.ignoresSafeArea(.all)
+                Color.systemBackground.edgesIgnoringSafeArea(.all)
                 VStack {
-                    CustomPrompt(title: "Email",
-                                 promptValue: $viewModel.email)
-                    CustomPassword(title: "Password",
-                                   addForgotPasswordIndication: true,
-                                   promptValue: $viewModel.password)
-                    Button {
-                        Task {
-                            await viewModel.signIn()
-                            if viewModel.isAuthenticated {
-                                firebase.isAuthenticated = true
-                                dismiss()
+                    CustoTextfield(title: "Email",
+                                   introduction: "marie-george_buffet412@gmail.com",
+                                   keyboardType: .default,
+                                   promptValue: $viewModel.email,
+                                   size: CGSize(width: 358, height: 56))
+                    .padding(.top)
+                    CustoTextfieldPassword(title: "Password",
+                                   introduction: "",
+                                   keyboardType: .default,
+                                   promptValue: $viewModel.password,
+                                   size: CGSize(width: 358, height: 56))
+                    .padding(.top, 15)
+                    HStack(alignment: .center) {
+                        Button {
+                            Task {
+                                await viewModel.signIn()
+                                if viewModel.isAuthenticated {
+                                    firebase.isAuthenticated = true
+                                    dismiss()
+                                }
                             }
-                        }
-                    } label: {
-                        HStack(alignment: .center) {
+                        } label: {
                             Text("Sign in")
                                 .foregroundStyle(.white)
+                                .font(.system(size: 16, weight: .semibold))
                         }
-                        .frame(width: 242, height: 52)
+                        .frame(width: 100, height: 52)
+                        .padding(.horizontal)
+                        .background(.red)
+                        Button {
+                            presentSignUp = true
+                        } label: {
+                            Text("Sign up")
+                                .foregroundStyle(.white)
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        .frame(width: 100, height: 52)
                         .padding(.horizontal)
                         .background(.red)
                     }
-                    Button {
-                        presentSignUp = true
-                    } label: {
-                        Text("Sign up")
-                            .frame(width: 242, height: 52)
-                            .padding(.horizontal)
-                            .background(.red)
-                    }
-                    .frame(width: 242, height: 52)
                     .padding(.horizontal)
-                    .background(.red)
+                    .padding(.top, 15)
                 }
             }
+            .alert(isPresented: $viewModel.alertIsPresented) {
+                Alert(title: Text("Important message"), message: Text(viewModel.alert?.errorDescription ?? "An error occurred"), dismissButton: .default(Text("Got it!")))
+            }
+            .navigationTitle("Sign in")
             .navigationDestination(isPresented: $presentSignUp) {
                 SignUp()
             }
         }
-        .toolbar {
-            ToolbarItem(placement: .title) {
-                Text("Login")
-                    .foregroundStyle(.white)
-            }
-        }
     }
 }
-//#Preview {
-//    SignIn()
-//}

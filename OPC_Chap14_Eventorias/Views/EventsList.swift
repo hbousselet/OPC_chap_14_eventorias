@@ -15,7 +15,7 @@ struct EventsList: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            Color.customGray.ignoresSafeArea(.all)
+            Color.systemBackground.ignoresSafeArea(.all)
             GeometryReader { geometry in
                 ZStack(alignment: .bottomTrailing) {
                     if !viewModel.alertIsPresented, !viewModel.events.isEmpty {
@@ -67,13 +67,13 @@ struct EventsList: View {
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
-//            ToolbarItem(placement: .topBarTrailing) {
-//                Button {
-//                    firebase.logout()
-//                } label: {
-//                    Text("Deconexion")
-//                }
-//            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    firebase.logout()
+                } label: {
+                    Text("Deconexion")
+                }
+            }
         }
     }
     

@@ -15,15 +15,28 @@ import FirebaseAuth
     var password: String = ""
     var name: String = ""
     var isAuthenticated: Bool = false
-    var error: Error?
+    var alertIsPresented: Bool = false
+    var alert: EventoriasAlerts? = Optional.none
     
     func signIn() async {
+        guard isValidEmail(email) else {
+            alertIsPresented = true
+            alert = .invalidEmail
+            return
+        }
+        
+        guard !password.isEmpty else {
+            alertIsPresented = true
+            alert = .emptyPassword
+            return
+        }
+        
         do {
             _ = try await Auth.auth().signIn(withEmail: email, password: password)
-            print("On vient de se log ma gueule")
             isAuthenticated = true
         } catch {
-            self.error = error
+            alertIsPresented = true
+            alert = error as? EventoriasAlerts ?? EventoriasAlerts.invalidEmail
             print(error)
         }
     }
@@ -31,16 +44,15 @@ import FirebaseAuth
     func signUp() async {
         do {
             _ = try await Auth.auth().createUser(withEmail: email, password: password)
-            print("On vient de créer un compte mon gars")
             try await populateUserInDb()
             isAuthenticated = true
         } catch {
-            self.error = error
-            print(error)
+            alertIsPresented = true
+            alert = error as? EventoriasAlerts
         }
     }
     
-    func populateUserInDb() async throws {
+    private func populateUserInDb() async throws {
         let user = User(name: name,
                         email: email,
                         icon: nil,
@@ -48,5 +60,12 @@ import FirebaseAuth
         if let currentAuthUser = Auth.auth().currentUser {
             try await user.populateUser(currentAuthUser.uid)
         }
+    }
+    
+    private func isValidEmail(_ email: String) -> Bool {
+        guard !email.isEmpty else { return false }
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return emailPredicate.evaluate(with: email)
     }
 }

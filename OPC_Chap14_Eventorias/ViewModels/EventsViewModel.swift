@@ -19,7 +19,7 @@ import UIKit
     var search: String = ""
     var signOut: Bool = false
     var alertIsPresented: Bool = false
-    var alert: EventsAlert? = Optional.none
+    var alert: EventoriasAlerts? = Optional.none
     var sorting: EventsSorting = .none
     var documentId: String?
     
@@ -62,7 +62,7 @@ import UIKit
             }
         } catch {
             alertIsPresented = true
-            alert = error as? EventsAlert
+            alert = error as? EventoriasAlerts
         }
     }
     
@@ -87,7 +87,7 @@ import UIKit
             }
         } catch {
             alertIsPresented = true
-            alert = error as? EventsAlert
+            alert = error as? EventoriasAlerts
         }
     }
     
@@ -109,32 +109,6 @@ import UIKit
             sorting = .dateAscending
         case .dateAscending:
             sorting = .none
-        }
-    }
-}
-
-enum EventsAlert: Error {
-    case notAbleToFetchEvents(error: Error)
-    case notAbleToDownloadImage(error: Error)
-    case notAbleToFetchUser(error: Error)
-    case userDoesNotExist
-    case notAbleToLoadUserImage(error: Error)
-    case none
-    
-    var errorDescription: String? {
-        switch self {
-        case .none:
-            return "No error"
-        case .notAbleToFetchEvents(error: let error):
-            return "Not able to fetch events : \(error.localizedDescription)"
-        case .notAbleToDownloadImage(error: let error):
-            return "Not able to download image : \(error.localizedDescription)"
-        case .notAbleToFetchUser(error: let error):
-            return "Not able to fetch user : \(error.localizedDescription)"
-        case .notAbleToLoadUserImage(error: let error):
-            return "Not able to load user's image : \(error.localizedDescription)"
-        case .userDoesNotExist:
-            return "User does not exist"
         }
     }
 }

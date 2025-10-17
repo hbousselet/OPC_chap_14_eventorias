@@ -19,7 +19,7 @@ struct EventCreation: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            Color.customGray
+            Color.systemBackground
                 .ignoresSafeArea(.all)
             ScrollView {
                 VStack {

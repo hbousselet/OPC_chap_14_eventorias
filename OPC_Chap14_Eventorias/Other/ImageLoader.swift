@@ -37,7 +37,7 @@ class ImageLoader {
             setImage(uiImage, forKey: name)
         } catch {
             print("error : \(error)")
-            throw EventsAlert.notAbleToLoadUserImage(error: error)
+            throw EventoriasAlerts.notAbleToLoadUserImage(error: error)
         }
     }
     
@@ -49,7 +49,7 @@ class ImageLoader {
             self.setImage(uiImage, forKey: name)
         } catch {
             print("error can't load image: \(error)")
-            throw EventsAlert.notAbleToDownloadImage(error: error)
+            throw EventoriasAlerts.notAbleToDownloadImage(error: error)
         }
     }
 }

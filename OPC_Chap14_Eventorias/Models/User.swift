@@ -27,7 +27,6 @@ extension User {
                 "notification": notification
             ])
         } catch {
-            print("Error getting documents: \(error)")
             throw error
         }
     }
@@ -42,11 +41,11 @@ extension User {
                 let user = try document.data(as: User.self)
                 return user
             } else {
-                throw EventsAlert.userDoesNotExist
+                throw EventoriasAlerts.userDoesNotExist
             }
         } catch {
             print("Error getting documents: \(error)")
-            throw EventsAlert.notAbleToFetchUser(error: error)
+            throw EventoriasAlerts.notAbleToFetchUser(error: error)
         }
     }
 }

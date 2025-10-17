@@ -19,7 +19,7 @@ struct EventDetails: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            Color.customGray.ignoresSafeArea(.all)
+            Color.systemBackground.ignoresSafeArea(.all)
             ScrollView {
                 VStack(alignment: .leading) {
                     Image(uiImage: viewModel.getImage(name: event.image))

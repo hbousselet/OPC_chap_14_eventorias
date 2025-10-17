@@ -17,7 +17,7 @@ struct Profile: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            Color.customGray.ignoresSafeArea(.all)
+            Color.systemBackground.ignoresSafeArea(.all)
             ScrollView {
                 VStack(alignment: .leading) {
                     CustoTextfield(title: "Name",
