@@ -26,6 +26,8 @@ import SwiftUI
     var dismiss: Bool = false
     var type: EventType?
     
+    var createdDocumentId: String?
+    
     var getCurrentUserId: String {
         Auth.auth().currentUser?.uid ?? ""
     }
@@ -60,6 +62,7 @@ import SwiftUI
             await turnAddressToLocation()
             try await uploadEvent(with: date)
             await exportImage()
+            dismiss = true
         } catch {
             print("Error blabla: \(error)")
         }
@@ -77,7 +80,8 @@ import SwiftUI
         ]
         do {
             let db = Firestore.firestore()
-            try await db.collection("Event").addDocument(data: event)
+            let newDocumentReference = try await db.collection("Event").addDocument(data: event)
+            createdDocumentId = newDocumentReference.documentID
             
         } catch {
             print("Error adding document: \(error)")

@@ -143,12 +143,11 @@ struct EventsList: View {
     
     private func eventElement(_ event: EventModel, with size: CGSize) -> some View {
         HStack {
-//            image(with: event.profil?.icon, size: CGSize(width: 40.0, height: 40.0))
             imageInCached(name: event.profil?.email ?? "",
                           size: CGSize(width: 40.0, height: 40.0))
-                .clipShape(.circle)
-                .padding(.leading, 16)
-                .padding(.vertical, 20)
+            .clipShape(.circle)
+            .padding(.leading, 16)
+            .padding(.vertical, 20)
             VStack {
                 Text(event.name)
                     .lineLimit(1)
@@ -160,10 +159,9 @@ struct EventsList: View {
             .padding(.vertical, 16)
             .padding(.horizontal)
             Spacer()
-//            image(with: event.image, size: CGSize(width: 136.0, height: 80.0))
             imageInCached(name: event.image,
                           size: CGSize(width: 136.0, height: 80.0))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .frame(width: size.width * 0.9, height: 80)
         .background(.gray, in: RoundedRectangle(cornerRadius: 12))

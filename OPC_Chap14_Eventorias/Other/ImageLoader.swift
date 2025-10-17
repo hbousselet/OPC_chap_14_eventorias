@@ -22,6 +22,7 @@ class ImageLoader {
     }
     
     func setImage(_ image: UIImage, forKey key: String) {
+        print("On vient de mettre en cache: \(key)")
         cache.setObject(image, forKey: key as NSString)
     }
     
@@ -50,7 +51,19 @@ class ImageLoader {
             print("error can't load image: \(error)")
             throw EventsAlert.notAbleToDownloadImage(error: error)
         }
-        
     }
     
+    func downloadIma(from path: String, with name: String) async  {
+        let imageRef = Storage.storage().reference().child("images/\(path).jpg")
+        do {
+//            return try await imageRef.data(maxSize: 1 * 3024 * 4032)
+            let imageData = try await imageRef.data(maxSize: 1 * 3024 * 4032)
+            guard let uiImage = UIImage(data: imageData) else { return }
+            self.setImage(uiImage, forKey: name)
+        } catch {
+            print("error can't load image: \(error)")
+//            return nil
+//            throw EventsAlert.notAbleToDownloadImage(error: error)
+        }
+    }
 }

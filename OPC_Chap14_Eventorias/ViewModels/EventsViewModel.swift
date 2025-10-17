@@ -43,21 +43,50 @@ import UIKit
             var convertedEvents: [EventModel] = firestoreEvents.compactMap { $0.convert() }
             
             for (index, event) in convertedEvents.enumerated() {
-                try await imageLoader.downloadImageInStorage(from: event.image, with: event.name.removeSpacesAndLowercase())
-                guard let userid = event.user else { continue }
+                async let loadEventImage: () = imageLoader.downloadImageInStorage(from: event.image, with: event.name.removeSpacesAndLowercase())
+//                try await imageLoader.downloadImageInStorage(from: event.image, with: event.name.removeSpacesAndLowercase())
+                let userid = event.user
                 let user = try await User.fetchUser(userid)
                 convertedEvents[index].profil = user
-                try await imageLoader.downloadImage(from: user.icon, with: user.email)
+//                try await imageLoader.downloadImage(from: user.icon, with: user.email)
                 //events ajouté à chaque fois qu'un est fetch
-                events.append(convertedEvents[index])
+//                events.append(convertedEvents[index])
             }
             // events ajoutés à la fin
-//            events = convertedEvents
+            events = convertedEvents
         } catch {
             print("error : \(error)")
             alertIsPresented = true
             alert = error as? EventsAlert
         }
+    }
+    
+    func fetchEventsV2() async {
+        await withTaskGroup() { taskGroup in
+            let firestoreEvents = await Event.fetchEvents()
+            let convertedEvents: [EventModel] = firestoreEvents.compactMap { $0.convert() }
+            
+            for (index, event) in convertedEvents.enumerated() {
+                self.events.append(convertedEvents[index])
+                
+                taskGroup.addTask {
+                    await self.imageLoader.downloadIma(from: event.image, with: event.name.removeSpacesAndLowercase())
+                    self.events[index].canFetchEventImage = true
+                }
+                
+                taskGroup.addTask {
+                    do {
+                        let user = try await User.fetchUser(event.user)
+                        try await self.imageLoader.downloadImage(from: user.icon, with: user.email)
+                        self.events[index].profil = user
+                    } catch {
+                        
+                    }
+                }
+                
+            }
+        }
+
     }
     
     func getImage(name: String) -> UIImage {
