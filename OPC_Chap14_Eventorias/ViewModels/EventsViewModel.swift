@@ -14,7 +14,7 @@ import FirebaseStorage
 import CoreLocation
 import UIKit
 
-@Observable class EventsViewModel {
+@Observable @MainActor class EventsViewModel {
     private(set) var events: [EventModel] = []
     var search: String = ""
     var signOut: Bool = false
@@ -38,49 +38,35 @@ import UIKit
     }
     
     func fetchEvents() async {
-        do {
-            let firestoreEvents = try await Event.fetchEvents()
-            var convertedEvents: [EventModel] = firestoreEvents.compactMap { $0.convert() }
-            
-            for (index, event) in convertedEvents.enumerated() {
-                async let loadEventImage: () = imageLoader.downloadImageInStorage(from: event.image, with: event.name.removeSpacesAndLowercase())
-//                try await imageLoader.downloadImageInStorage(from: event.image, with: event.name.removeSpacesAndLowercase())
-                let userid = event.user
-                let user = try await User.fetchUser(userid)
-                convertedEvents[index].profil = user
-//                try await imageLoader.downloadImage(from: user.icon, with: user.email)
-                //events ajouté à chaque fois qu'un est fetch
-//                events.append(convertedEvents[index])
-            }
-            // events ajoutés à la fin
-            events = convertedEvents
-        } catch {
-            print("error : \(error)")
-            alertIsPresented = true
-            alert = error as? EventsAlert
-        }
-    }
-    
-    func fetchEventsV2() async {
         await withTaskGroup() { taskGroup in
             let firestoreEvents = await Event.fetchEvents()
             let convertedEvents: [EventModel] = firestoreEvents.compactMap { $0.convert() }
             
             for (index, event) in convertedEvents.enumerated() {
-                self.events.append(convertedEvents[index])
+                await MainActor.run { self.events.append(convertedEvents[index]) }
                 
                 taskGroup.addTask {
-                    await self.imageLoader.downloadIma(from: event.image, with: event.name.removeSpacesAndLowercase())
-                    self.events[index].canFetchEventImage = true
+                    do {
+                        try await self.imageLoader.downloadImageWithPath(from: event.image, with: event.name.removeSpacesAndLowercase())
+                        await MainActor.run { self.events[index].canFetchEventImage = true }
+                    } catch {
+                        await MainActor.run {
+                            self.alertIsPresented = true
+                            self.alert = error as? EventsAlert
+                        }
+                    }
                 }
                 
                 taskGroup.addTask {
                     do {
                         let user = try await User.fetchUser(event.user)
-                        try await self.imageLoader.downloadImage(from: user.icon, with: user.email)
-                        self.events[index].profil = user
+                        try await self.imageLoader.downloadImageWithUrl(from: user.icon, with: user.email)
+                        await MainActor.run { self.events[index].profil = user }
                     } catch {
-                        
+                        await MainActor.run {
+                            self.alertIsPresented = true
+                            self.alert = error as? EventsAlert
+                        }
                     }
                 }
                 
