@@ -32,7 +32,7 @@ struct Home: View {
         .tabViewStyle(.sidebarAdaptable)
         .navigationBarBackButtonHidden(true)
         .task {
-            await eventViewModel.fetchEventsV2()
+            await eventViewModel.fetchEvents()
             await userViewModel.fetchUser()
         }
     }

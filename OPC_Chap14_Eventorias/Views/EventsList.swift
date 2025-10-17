@@ -123,7 +123,6 @@ struct EventsList: View {
             .zIndex(1)
         }
     }
-
     
     private func addEventButton() -> some View {
         Button {
