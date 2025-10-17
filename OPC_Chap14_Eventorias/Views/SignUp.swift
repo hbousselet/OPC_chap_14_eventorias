@@ -14,15 +14,26 @@ struct SignUp: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            Color.gray.ignoresSafeArea(.all)
+            Color.systemBackground.edgesIgnoringSafeArea(.all)
             VStack {
-                CustomPrompt(title: "Name",
-                             promptValue: $viewModel.name)
-                CustomPrompt(title: "Email",
-                             promptValue: $viewModel.email)
-                CustomPassword(title: "Password",
-                               addForgotPasswordIndication: true,
-                               promptValue: $viewModel.password)
+                CustoTextfield(title: "Name",
+                               introduction: "Marie George Aimée Buffet",
+                               keyboardType: .default,
+                               promptValue: $viewModel.name,
+                               size: CGSize(width: 358, height: 56))
+                .padding(.top)
+                CustoTextfield(title: "Email",
+                               introduction: "marie-george_buffet412@gmail.com",
+                               keyboardType: .default,
+                               promptValue: $viewModel.email,
+                               size: CGSize(width: 358, height: 56))
+                .padding(.top, 15)
+                CustoTextfieldPassword(title: "Password",
+                               introduction: "",
+                               keyboardType: .default,
+                               promptValue: $viewModel.password,
+                               size: CGSize(width: 358, height: 56))
+                .padding(.top, 15)
                 Button {
                     Task {
                         await viewModel.signUp()
@@ -32,21 +43,27 @@ struct SignUp: View {
                         }
                     }
                 } label: {
-                    HStack(alignment: .center) {
                         Text("Sign up")
                             .foregroundStyle(.white)
+                            .font(.system(size: 16, weight: .semibold))
+                            .padding(.horizontal)
+                            .padding(.top)
                     }
-                    .frame(width: 242, height: 52)
-                    .padding(.horizontal)
-                    .background(.red)
+                .frame(width: 168, height: 52)
+                .padding(.horizontal)
+                .padding(.top, 15)
+                .background(.red)
                 }
             }
+        .alert(isPresented: $viewModel.alertIsPresented) {
+            Alert(title: Text("Important message"), message: Text(viewModel.alert?.errorDescription ?? "An error occurred"), dismissButton: .default(Text("Got it!")))
         }
-        .toolbar {
-            ToolbarItem(placement: .title) {
-                Text("Sign up")
-                    .foregroundStyle(.white)
-            }
-        }
+        .navigationTitle("Sign up")
+//        .toolbar {
+//            ToolbarItem(placement: .title) {
+//                Text("Sign up")
+//                    .foregroundStyle(.white)
+//            }
+//        }
     }
 }

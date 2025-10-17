@@ -16,8 +16,9 @@ enum EventoriasAlerts: Error {
     case notAbleToSignIn(error: Error)
     case notAbleToPopulateUserInDb(error: Error)
     case emptyPassword
+    case emptyName
     case invalidEmail
-    case notAbleTologin
+    case notAbleToSignUp
     case none
     
     var errorDescription: String? {
@@ -42,8 +43,10 @@ enum EventoriasAlerts: Error {
             return "Password is empty. Retry with a valid password."
         case .invalidEmail:
             return "Email is invalid. Retry with a valid email."
-        case .notAbleTologin:
-            return "The supplied auth credential is malformed or has expired. Please sign in again."
+        case .notAbleToSignUp:
+            return "Not able to sign up. Please retry."
+        case .emptyName:
+            return "The name entered is empty. Please enter a valid name."
         }
     }
 }

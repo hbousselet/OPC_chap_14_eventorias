@@ -36,19 +36,36 @@ import FirebaseAuth
             isAuthenticated = true
         } catch {
             alertIsPresented = true
-            alert = error as? EventoriasAlerts ?? EventoriasAlerts.invalidEmail
+            alert = error as? EventoriasAlerts ?? EventoriasAlerts.notAbleToSignIn(error: error)
             print(error)
         }
     }
     
     func signUp() async {
         do {
+            guard isValidEmail(email) else {
+                alertIsPresented = true
+                alert = .invalidEmail
+                return
+            }
+            guard !name.isEmpty else {
+                alertIsPresented = true
+                alert = .emptyName
+                return
+            }
+            
+            guard !password.isEmpty else {
+                alertIsPresented = true
+                alert = .emptyPassword
+                return
+            }
+            
             _ = try await Auth.auth().createUser(withEmail: email, password: password)
             try await populateUserInDb()
             isAuthenticated = true
         } catch {
             alertIsPresented = true
-            alert = error as? EventoriasAlerts
+            alert = error as? EventoriasAlerts ?? EventoriasAlerts.notAbleToSignUp
         }
     }
     
