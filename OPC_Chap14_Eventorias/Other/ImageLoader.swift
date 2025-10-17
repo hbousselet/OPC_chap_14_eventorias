@@ -26,7 +26,7 @@ class ImageLoader {
         cache.setObject(image, forKey: key as NSString)
     }
     
-    func downloadImage(from url: URL?, with name: String) async throws {
+    func downloadImageWithUrl(from url: URL?, with name: String) async throws {
         guard let url else { return }
         do {
             let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
@@ -41,7 +41,7 @@ class ImageLoader {
         }
     }
     
-    func downloadImageInStorage(from path: String, with name: String) async throws {
+    func downloadImageWithPath(from path: String, with name: String) async throws {
         let imageRef = Storage.storage().reference().child("images/\(path).jpg")
         do {
             let imageData = try await imageRef.data(maxSize: 1 * 3024 * 4032)
@@ -50,20 +50,6 @@ class ImageLoader {
         } catch {
             print("error can't load image: \(error)")
             throw EventsAlert.notAbleToDownloadImage(error: error)
-        }
-    }
-    
-    func downloadIma(from path: String, with name: String) async  {
-        let imageRef = Storage.storage().reference().child("images/\(path).jpg")
-        do {
-//            return try await imageRef.data(maxSize: 1 * 3024 * 4032)
-            let imageData = try await imageRef.data(maxSize: 1 * 3024 * 4032)
-            guard let uiImage = UIImage(data: imageData) else { return }
-            self.setImage(uiImage, forKey: name)
-        } catch {
-            print("error can't load image: \(error)")
-//            return nil
-//            throw EventsAlert.notAbleToDownloadImage(error: error)
         }
     }
 }
