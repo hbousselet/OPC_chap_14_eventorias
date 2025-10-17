@@ -11,6 +11,7 @@ import PhotosUI
 struct EventCreation: View {
     @Binding var isPresented: Bool
     @State private var viewModel: EventCreationViewModel = EventCreationViewModel()
+    @Environment(EventsViewModel.self) private var eventViewModel
     
     @State private var pickerItem: PhotosPickerItem?
     @State private var showImagePicker = false
@@ -89,6 +90,7 @@ struct EventCreation: View {
         .onChange(of: viewModel.dismiss) { newValue in
             if newValue == true {
                 isPresented = false
+                eventViewModel.documentId = viewModel.createdDocumentId
             }
         }
         .sheet(isPresented: $showImagePicker) {

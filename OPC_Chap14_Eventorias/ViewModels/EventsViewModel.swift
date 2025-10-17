@@ -21,6 +21,7 @@ import UIKit
     var alertIsPresented: Bool = false
     var alert: EventsAlert? = Optional.none
     var sorting: EventsSorting = .none
+    var documentId: String?
     
     let imageLoader = ImageLoader.shared
     
@@ -38,41 +39,56 @@ import UIKit
     }
     
     func fetchEvents() async {
-        await withTaskGroup() { taskGroup in
-            let firestoreEvents = await Event.fetchEvents()
-            let convertedEvents: [EventModel] = firestoreEvents.compactMap { $0.convert() }
-            
-            for (index, event) in convertedEvents.enumerated() {
-                await MainActor.run { self.events.append(convertedEvents[index]) }
+        do {
+            try await withThrowingTaskGroup(of: Void.self) { [weak self] taskGroup in
+                let firestoreEvents = try await Event.fetchEvents()
+                let convertedEvents: [EventModel] = firestoreEvents.compactMap { $0.convert() }
                 
-                taskGroup.addTask {
-                    do {
-                        try await self.imageLoader.downloadImageWithPath(from: event.image, with: event.name.removeSpacesAndLowercase())
-                        await MainActor.run { self.events[index].canFetchEventImage = true }
-                    } catch {
-                        await MainActor.run {
-                            self.alertIsPresented = true
-                            self.alert = error as? EventsAlert
-                        }
+                for (index, event) in convertedEvents.enumerated() {
+                    await MainActor.run { self?.events.append(convertedEvents[index]) }
+                    
+                    taskGroup.addTask {
+                        try await self?.imageLoader.downloadImageWithPath(from: event.image, with: event.name.removeSpacesAndLowercase())
+                        await MainActor.run { self?.events[index].canFetchEventImage = true }
                     }
-                }
-                
-                taskGroup.addTask {
-                    do {
+                    
+                    taskGroup.addTask {
                         let user = try await User.fetchUser(event.user)
-                        try await self.imageLoader.downloadImageWithUrl(from: user.icon, with: user.email)
-                        await MainActor.run { self.events[index].profil = user }
-                    } catch {
-                        await MainActor.run {
-                            self.alertIsPresented = true
-                            self.alert = error as? EventsAlert
-                        }
+                        try await self?.imageLoader.downloadImageWithUrl(from: user.icon, with: user.email)
+                        await MainActor.run { self?.events[index].profil = user }
                     }
+                    
+                }
+            }
+        } catch {
+            alertIsPresented = true
+            alert = error as? EventsAlert
+        }
+    }
+    
+    func fetchEvent(with documentId: String) async {
+        print("Fetch event called with document id: \(documentId)")
+        do {
+            try await withThrowingTaskGroup(of: Void.self) { [weak self] taskGroup in
+                let firestoreEvent = try await Event.fetchEvent(with: documentId)
+                var convertedEvent: EventModel = firestoreEvent.convert()
+                                
+                taskGroup.addTask {
+                    try await self?.imageLoader.downloadImageWithPath(from: convertedEvent.image, with: convertedEvent.name.removeSpacesAndLowercase())
+                    await MainActor.run { self?.events[(self?.events.count ?? 1) - 1].canFetchEventImage = true }
                 }
                 
+                taskGroup.addTask {
+                    let user = try await User.fetchUser(convertedEvent.user)
+                    try await self?.imageLoader.downloadImageWithUrl(from: user.icon, with: user.email)
+                    convertedEvent.profil = user
+                    await MainActor.run { self?.events.append(convertedEvent) }
+                }
             }
+        } catch {
+            alertIsPresented = true
+            alert = error as? EventsAlert
         }
-
     }
     
     func getImage(name: String) -> UIImage {

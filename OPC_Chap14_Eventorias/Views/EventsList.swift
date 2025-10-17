@@ -59,6 +59,12 @@ struct EventsList: View {
             EventCreation(isPresented: $isNavigating)
                 .environment(viewModel)
         }
+        .onChange(of: viewModel.documentId) { newValue in
+            guard let newValue else { return }
+            Task {
+                await viewModel.fetchEvent(with: newValue)
+            }
+        }
         .navigationBarBackButtonHidden(true)
         .toolbar {
 //            ToolbarItem(placement: .topBarTrailing) {

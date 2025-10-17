@@ -21,9 +21,9 @@ struct Event: Codable {
 }
 
 extension Event {
-    static func fetchEvents() async  -> [Event] {
+    static func fetchEvents() async throws -> [Event] {
+        let db = Firestore.firestore()
         do {
-            let db = Firestore.firestore()
             var events: [Event] = []
             let eventsFetched = try await db.collection("Event").getDocuments()
             for event in eventsFetched.documents {
@@ -34,8 +34,19 @@ extension Event {
             
         } catch {
             print("Error getting documents: \(error)")
-            return []
-//            throw EventsAlert.notAbleToFetchEvents(error: error)
+            throw EventsAlert.notAbleToFetchEvents(error: error)
+        }
+    }
+    
+    static func fetchEvent(with documentId: String) async throws -> Event {
+        let db = Firestore.firestore()
+        let docRef = db.collection("Event").document(documentId)
+        
+        do {
+            let event = try await docRef.getDocument(as: Event.self)
+            return event
+        } catch {
+            throw EventsAlert.notAbleToFetchEvents(error: error)
         }
     }
     
