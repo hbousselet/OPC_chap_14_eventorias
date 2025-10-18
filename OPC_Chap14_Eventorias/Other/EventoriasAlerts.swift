@@ -19,6 +19,13 @@ enum EventoriasAlerts: Error {
     case emptyName
     case invalidEmail
     case notAbleToSignUp
+    case invalidDate
+    case emptyDate
+    case emptyTitle
+    case emptyDescription
+    case emptyAddress
+    case invalidAddress
+    case failedEventCreation
     case none
     
     var errorDescription: String? {
@@ -47,6 +54,20 @@ enum EventoriasAlerts: Error {
             return "Not able to sign up. Please retry."
         case .emptyName:
             return "The name entered is empty. Please enter a valid name."
+        case .invalidDate:
+            return "You entered an invalid date. Please try again."
+        case .emptyDate:
+            return "No date was entered. Please enter a date."
+        case .emptyTitle:
+            return "Please enter a title."
+        case .emptyDescription:
+            return "Please enter a description."
+        case .emptyAddress:
+            return "Please enter an address."
+        case .invalidAddress:
+            return "The address you entered was not found. Please try again."
+        case .failedEventCreation:
+            return "Not able to create the event. Please retry in a few moments."
         }
     }
 }

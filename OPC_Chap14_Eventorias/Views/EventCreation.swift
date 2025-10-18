@@ -82,6 +82,9 @@ struct EventCreation: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom, 16)
         }
+        .alert(isPresented: $viewModel.alertIsPresented) {
+            Alert(title: Text("Important message"), message: Text(viewModel.alert.errorDescription ?? "An error occurred"), dismissButton: .default(Text("Got it!")))
+        }
         .onChange(of: pickerItem) {
             Task {
                 viewModel.selectedImage = try await pickerItem?.loadTransferable(type: Data.self)

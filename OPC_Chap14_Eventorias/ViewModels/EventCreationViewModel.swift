@@ -22,7 +22,7 @@ import SwiftUI
     var imageName: String = ""
     var selectedImage: Data?
     var alertIsPresented: Bool = false
-    var alert: EventCreationAlert = .none
+    var alert: EventoriasAlerts = .none
     var dismiss: Bool = false
     var type: EventType?
     
@@ -65,7 +65,7 @@ import SwiftUI
             dismiss = true
         } catch {
             alertIsPresented = true
-            alert =
+            alert = .failedEventCreation
         }
     }
     
@@ -125,14 +125,4 @@ import SwiftUI
             print("Error: \(error)")
         }
     }
-}
-
-enum EventCreationAlert: String {
-    case none
-    case invalidDate = "You entered an invalid date. Please try again."
-    case emptyDate = "No date was entered. Please enter a date"
-    case emptyTitle = "Please enter a title"
-    case emptyDescription = "Please enter a description"
-    case emptyAddress = "Please enter an address"
-    case invalidAddress = "The address you entered was not found. Please try again."
 }
