@@ -36,7 +36,6 @@ class ImageLoader {
                 return }
             setImage(uiImage, forKey: name)
         } catch {
-            print("error : \(error)")
             throw EventoriasAlerts.notAbleToLoadUserImage(error: error)
         }
     }
@@ -48,7 +47,6 @@ class ImageLoader {
             guard let uiImage = UIImage(data: imageData) else { return }
             self.setImage(uiImage, forKey: name)
         } catch {
-            print("error can't load image: \(error)")
             throw EventoriasAlerts.notAbleToDownloadImage(error: error)
         }
     }

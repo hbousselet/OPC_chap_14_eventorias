@@ -64,7 +64,8 @@ import SwiftUI
             await exportImage()
             dismiss = true
         } catch {
-            print("Error blabla: \(error)")
+            alertIsPresented = true
+            alert =
         }
     }
     

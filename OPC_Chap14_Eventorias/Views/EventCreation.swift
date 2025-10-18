@@ -62,7 +62,7 @@ struct EventCreation: View {
                     }
                     .pickerStyle(.inline)
                     .frame(width: 358, height: 56)
-                    .background(.gray)
+                    .background(Color.textfieldBackground)
                     .padding(.top, .topPadding)
                     HStack(alignment: .center) {
                         cameraButton
@@ -73,7 +73,7 @@ struct EventCreation: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom)
             }
-            .padding(.top, 180)
+            .padding(.top, 140)
             .ignoresSafeArea(edges: .top)
         }
         .navigationTitle("Creation of an Event")

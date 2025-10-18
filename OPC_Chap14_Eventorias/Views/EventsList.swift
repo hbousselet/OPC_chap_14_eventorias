@@ -66,15 +66,6 @@ struct EventsList: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    firebase.logout()
-                } label: {
-                    Text("Deconexion")
-                }
-            }
-        }
     }
     
     private var alertView: some View {
@@ -185,6 +176,7 @@ struct EventsList: View {
             .padding(.vertical, 15)
             .foregroundStyle(.white)
         }
+        .frame(height: 35)
         .background(.gray, in: .capsule)
     }
     
@@ -196,31 +188,6 @@ struct EventsList: View {
             Image(systemName: "arrow.down")
         default:
             Image(systemName: "arrow.up.arrow.down")
-        }
-    }
-    
-    @ViewBuilder
-    private func image(with url: URL?, size: CGSize) -> some View {
-        AsyncImage(url: url,
-                   transaction: Transaction(animation: .easeInOut)) { phase in
-            switch phase {
-            case .success(let image):
-                image.resizable()
-                    .scaledToFill()
-                    .frame(width: size.width, height: size.height)
-                    .clipped()
-            default:
-                ZStack(alignment: .center) {
-                    Image("placeholder-rectangle")
-                        .frame(width: size.width, height: size.height)
-                        .zIndex(1)
-                        .clipped()
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                        .zIndex(2)
-                        .foregroundStyle(.white)
-                }
-            }
         }
     }
     
@@ -240,6 +207,7 @@ struct CustomTextField: View {
         TextField("Search", text: $viewModel.search)
             .safeAreaInset(edge: .leading) { Image(systemName: "magnifyingglass") }
             .padding(.all)
+            .frame(height: 35)
             .background(.gray, in: .capsule)
     }
 }
