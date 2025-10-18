@@ -46,7 +46,7 @@ struct Profile: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Image(uiImage: eventViewModel.getImage(name: viewModel.user.email))
+                Image(uiImage: eventViewModel.getImage(name: viewModel.user.email, isPortrait: true))
                     .resizable()
                     .scaledToFill()
                     .clipped()

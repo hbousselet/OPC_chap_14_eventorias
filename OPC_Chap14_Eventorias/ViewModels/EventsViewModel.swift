@@ -91,14 +91,15 @@ import UIKit
         }
     }
     
-    func getImage(name: String) -> UIImage {
-        print("get image for : \(name)")
+    func getImage(name: String, isPortrait: Bool = false) -> UIImage {
         if let cachedImage = ImageLoader.shared.getImage(forKey: name) {
-            print("could get the image")
             return cachedImage
         }
-        print("not able to get the image")
-        return UIImage(named: "placeholder-rectangle")!
+        if isPortrait {
+            return UIImage(named: "portrait-placeholder")!
+        } else {
+            return UIImage(named: "image-placeholder")!
+        }
     }
     
     func sortingHit() {

@@ -140,7 +140,8 @@ struct EventsList: View {
     private func eventElement(_ event: EventModel, with size: CGSize) -> some View {
         HStack {
             imageInCached(name: event.profil?.email ?? "",
-                          size: CGSize(width: 40.0, height: 40.0))
+                          size: CGSize(width: 40.0, height: 40.0),
+                          isPortrait: true)
             .clipShape(.circle)
             .padding(.leading, 16)
             .padding(.vertical, 20)
@@ -191,8 +192,8 @@ struct EventsList: View {
         }
     }
     
-    private func imageInCached(name: String, size: CGSize) -> some View {
-        Image(uiImage: viewModel.getImage(name: name))
+    private func imageInCached(name: String, size: CGSize, isPortrait: Bool = false) -> some View {
+        Image(uiImage: viewModel.getImage(name: name, isPortrait: isPortrait))
             .resizable()
             .scaledToFill()
             .frame(width: size.width, height: size.height)

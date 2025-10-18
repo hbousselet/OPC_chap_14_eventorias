@@ -22,7 +22,6 @@ class ImageLoader {
     }
     
     func setImage(_ image: UIImage, forKey key: String) {
-        print("On vient de mettre en cache: \(key)")
         cache.setObject(image, forKey: key as NSString)
     }
     

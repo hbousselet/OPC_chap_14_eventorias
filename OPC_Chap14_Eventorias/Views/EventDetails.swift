@@ -70,7 +70,7 @@ struct EventDetails: View {
                 }
             }
             Spacer()
-            Image(uiImage: viewModel.getImage(name: event.profil?.email ?? "default_user"))
+            Image(uiImage: viewModel.getImage(name: event.profil?.email ?? "default-user", isPortrait: true))
                 .resizable()
                 .scaledToFill()
                 .clipped()

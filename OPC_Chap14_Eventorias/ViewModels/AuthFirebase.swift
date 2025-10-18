@@ -28,7 +28,7 @@ import FirebaseAuth
     }
     
     var email: String {
-        Auth.auth().currentUser?.email ?? "default_user"
+        Auth.auth().currentUser?.email ?? "default-user"
     }
     
     func logout() {
