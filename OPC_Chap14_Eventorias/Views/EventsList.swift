@@ -74,7 +74,7 @@ struct EventsList: View {
                 .clipped()
                 .frame(width: 64, height: 64)
                 .foregroundStyle(.white)
-                .background(.gray)
+                .background(Color.textfieldBackground)
                 .clipShape(Circle())
             Text("Error")
                 .padding(.top, 24)
@@ -161,7 +161,7 @@ struct EventsList: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .frame(width: size.width * 0.9, height: 80)
-        .background(.gray, in: RoundedRectangle(cornerRadius: 12))
+        .background(Color.textfieldBackground, in: RoundedRectangle(cornerRadius: 12))
         .foregroundStyle(.white)
     }
     
@@ -178,7 +178,7 @@ struct EventsList: View {
             .foregroundStyle(.white)
         }
         .frame(height: 35)
-        .background(.gray, in: .capsule)
+        .background(Color.textfieldBackground, in: .capsule)
     }
     
     private func getSortingArrow() -> some View {
@@ -209,6 +209,6 @@ struct CustomTextField: View {
             .safeAreaInset(edge: .leading) { Image(systemName: "magnifyingglass") }
             .padding(.all)
             .frame(height: 35)
-            .background(.gray, in: .capsule)
+            .background(Color.textfieldBackground, in: .capsule)
     }
 }
