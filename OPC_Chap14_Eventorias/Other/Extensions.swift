@@ -19,9 +19,9 @@ struct CustoTextfield: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(title)
-                .font(.system(size: 12, weight: .light))
+                .font(.custom("Inter_18pt-Regular", size: 12))
             TextField(introduction, text: $promptValue)
-                .font(.system(size: 16, weight: .regular))
+                .font(.custom("Inter_18pt-Regular", size: 16))
                 .autocorrectionDisabled(true)
                 .textInputAutocapitalization(.never)
                 .keyboardType(keyboardType)
@@ -47,9 +47,9 @@ struct CustoTextfieldPassword: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(title)
-                .font(.system(size: 12, weight: .light))
+                .font(.custom("Inter_18pt-Regular", size: 12))
             SecureField(introduction, text: $promptValue)
-                .font(.system(size: 16, weight: .regular))
+                .font(.custom("Inter_18pt-Regular", size: 16))
                 .autocorrectionDisabled(true)
                 .textInputAutocapitalization(.never)
                 .keyboardType(keyboardType)

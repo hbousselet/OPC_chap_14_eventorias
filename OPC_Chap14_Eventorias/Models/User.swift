@@ -44,7 +44,6 @@ extension User {
                 throw EventoriasAlerts.userDoesNotExist
             }
         } catch {
-            print("Error getting documents: \(error)")
             throw EventoriasAlerts.notAbleToFetchUser(error: error)
         }
     }

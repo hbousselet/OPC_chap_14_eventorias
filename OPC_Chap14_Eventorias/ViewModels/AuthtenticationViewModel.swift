@@ -9,8 +9,13 @@ import Foundation
 import SwiftUI
 import FirebaseAuth
 
-@MainActor
-@Observable class AuthtenticationViewModel {
+@MainActor protocol AutenticationProtocol {
+    func signIn() async
+    func signUp() async
+}
+
+
+@Observable class AuthtenticationViewModel: AutenticationProtocol {
     var email: String = ""
     var password: String = ""
     var name: String = ""

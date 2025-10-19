@@ -76,14 +76,20 @@ struct EventCreation: View {
             .padding(.top, 140)
             .ignoresSafeArea(edges: .top)
         }
-        .navigationTitle("Creation of an Event")
         .safeAreaInset(edge: .bottom) {
             validateButton
                 .padding(.horizontal, 16)
                 .padding(.bottom, 16)
         }
         .alert(isPresented: $viewModel.alertIsPresented) {
-            Alert(title: Text("Important message"), message: Text(viewModel.alert.errorDescription ?? "An error occurred"), dismissButton: .default(Text("Got it!")))
+            Alert(title: Text("Important message")
+                .font(.custom("Inter_18pt-Medium", size: 20))
+                  , message: Text(viewModel.alert.errorDescription ?? "An error occurred")
+                .font(.custom("Inter_18pt-Regular", size: 16))
+                  , dismissButton: .default(
+                    Text("Got it!")
+                        .font(.custom("Inter_18pt-Medium", size: 20))
+                  ))
         }
         .onChange(of: pickerItem) {
             Task {
@@ -104,6 +110,12 @@ struct EventCreation: View {
                 viewModel.selectedImage = selectedImage.jpegData(compressionQuality: 1)
             }
         })
+        .toolbar {
+            ToolbarItem(placement: .title) {
+                Text("Creation of an Event")
+                    .font(.custom("Inter_18pt-Medium", size: 20))
+            }
+        }
     }
     
     private var cameraButton: some View {
@@ -140,6 +152,7 @@ struct EventCreation: View {
         } label: {
             HStack(alignment: .center) {
                 Text("Validate")
+                    .font(.custom("Inter_18pt-Regular", size: 16))
                     .foregroundStyle(.white)
             }
             .frame(width: 358, height: 52)

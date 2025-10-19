@@ -45,7 +45,7 @@ struct SignUp: View {
                 } label: {
                         Text("Sign up")
                             .foregroundStyle(.white)
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(.custom("Inter_18pt-SemiBold", size: 16))
                             .padding(.horizontal)
                             .padding(.top)
                     }

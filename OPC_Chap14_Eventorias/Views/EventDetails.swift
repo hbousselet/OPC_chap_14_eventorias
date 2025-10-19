@@ -15,29 +15,38 @@ struct EventDetails: View {
     @State private var cameraPosition: MapCameraPosition = .automatic
 
     @Environment(EventsViewModel.self) private var viewModel
-
+    
+    var timeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }
     
     var body: some View {
         ZStack(alignment: .top) {
-            Color.systemBackground.ignoresSafeArea(.all)
-            ScrollView {
-                VStack(alignment: .leading) {
-                    Image(uiImage: viewModel.getImage(name: event.image))
-                        .resizable()
-                        .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .frame(width: 358, height: 354)
-                    dateInfo
-                        .padding(.top)
-                    eventDescription
-                        .padding(.top, 5)
-                    addressInfo
-                        .padding(.top, 5)
+            GeometryReader { geometry in
+                Color.systemBackground.ignoresSafeArea(.all)
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        Image(uiImage: viewModel.getImage(name: event.image))
+                            .resizable()
+                            .scaledToFill()
+                            .clipped()
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                        dateInfo
+                            .padding(.top)
+                        eventDescription
+                            .padding(.top, 5)
+                        addressInfo
+                            .padding(.top, 5)
+                    }
                 }
                 .padding(.horizontal, 16)
+                .padding(.top, 120)
+                .ignoresSafeArea(edges: .top)
             }
-            .padding(.top, 66)
-            .ignoresSafeArea(edges: .top)
         }
         .task {
             if let request = MKReverseGeocodingRequest(location:
@@ -52,7 +61,7 @@ struct EventDetails: View {
         .toolbar {
             ToolbarItem(placement: .title) {
                 Text(event.name)
-                    .foregroundStyle(.black)
+                    .font(.custom("Inter_18pt-Medium", size: 20))
             }
         }
     }
@@ -66,9 +75,10 @@ struct EventDetails: View {
                 }
                 HStack {
                     Image(systemName: "clock")
-                    Text(event.date, format: .dateTime.hour().minute())
+                    Text(event.date, formatter: timeFormatter)
                 }
             }
+            .font(.custom("Inter_18pt-Medium", size: 16))
             Spacer()
             Image(uiImage: viewModel.getImage(name: event.profil?.email ?? "default-user", isPortrait: true))
                 .resizable()
@@ -81,6 +91,7 @@ struct EventDetails: View {
     
     var eventDescription: some View {
         Text(event.description)
+            .font(.custom("Inter_18pt-Regular", size: 14))
     }
     
     var addressInfo: some View {
@@ -88,9 +99,11 @@ struct EventDetails: View {
             if let address = eventPlace?.address?.fullAddress {
                 Text(address)
                     .lineLimit(3)
+                    .font(.custom("Inter_18pt-Medium", size: 16))
             } else {
                 Text("No address available")
             }
+            Spacer()
             showMap()
         }
     }

@@ -16,13 +16,13 @@ struct Home: View {
     
     var body: some View {
         TabView(selection: $selectedTabIndex) {
-            Tab("Events", systemImage: "1.circle", value: 0) {
+            Tab("Events", systemImage: "calendar.badge", value: 0) {
                 NavigationStack {
                     EventsList()
                         .environment(eventViewModel)
                 }
             }
-            Tab("Profile", systemImage: "2.circle", value: 1) {
+            Tab("Profile", systemImage: "person.crop.circle", value: 1) {
                 NavigationStack {
                     Profile(viewModel: userViewModel)
                         .environment(eventViewModel)

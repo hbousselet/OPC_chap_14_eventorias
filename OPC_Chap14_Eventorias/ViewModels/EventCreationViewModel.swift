@@ -12,6 +12,10 @@ import FirebaseStorage
 import FirebaseFirestore
 import SwiftUI
 
+protocol EventCreationProtocol {
+    func createEvent() async
+}
+
 @Observable class EventCreationViewModel {
     var title: String = ""
     var description: String = ""

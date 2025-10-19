@@ -8,8 +8,14 @@
 import Foundation
 import FirebaseAuth
 
-@Observable class UserViewModel {
+protocol UserProtocol {
+    func fetchUser() async
+}
+
+@Observable class UserViewModel: UserProtocol {
     var user: User
+    var alertIsPresented: Bool = false
+    var alert: EventoriasAlerts? = Optional.none
     
     init() {
         let currentUser = Auth.auth().currentUser
@@ -23,16 +29,8 @@ import FirebaseAuth
         do {
             user = try await User.fetchUser(Auth.auth().currentUser!.uid)
         } catch {
-            print("User in error: \(error)")
+            alertIsPresented = true
+            alert = .notAbleToFetchUser(error: error)
         }
-    }
-    
-    func updateUser() async {
-        
-    }
-    
-    // TODO: implement this method
-    func toggleNotifications(value: Bool) async {
-        
     }
 }

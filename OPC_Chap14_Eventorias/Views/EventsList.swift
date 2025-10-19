@@ -78,9 +78,9 @@ struct EventsList: View {
                 .clipShape(Circle())
             Text("Error")
                 .padding(.top, 24)
-                .font(.system(size: 20, weight: .semibold))
+                .font(.custom("Inter_18pt-SemiBold", size: 20))
             Text(viewModel.alert?.errorDescription ?? "An error has occured, please try again later")
-                .font(.system(size: 16, weight: .regular))
+                .font(.custom("Inter_18pt-Regular", size: 16))
                 .lineLimit(2)
                 .padding(.top, 5)
             Button {
@@ -91,7 +91,7 @@ struct EventsList: View {
                 HStack(alignment: .center) {
                     Text("Try again")
                         .foregroundStyle(.white)
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.custom("Inter_18pt-SemiBold", size: 16))
                 }
                 .frame(width: 159, height: 40)
                 .background(.red, in: RoundedRectangle(cornerRadius: 4))
@@ -145,13 +145,14 @@ struct EventsList: View {
             .clipShape(.circle)
             .padding(.leading, 16)
             .padding(.vertical, 20)
-            VStack {
+            VStack(alignment: .leading) {
                 Text(event.name)
                     .lineLimit(1)
-                    .font(.system(size: 16, weight: .medium))
+                    .font(.custom("Inter_18pt-Medium", size: 16))
                 Text(event.date, format: .dateTime.month(.abbreviated).year().day())
                     .lineLimit(1)
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.custom("Inter_18pt-Medium", size: 14))
+                    .padding(.top, 4)
             }
             .padding(.vertical, 16)
             .padding(.horizontal)
@@ -172,6 +173,7 @@ struct EventsList: View {
             HStack {
                 getSortingArrow()
                 Text("Sorting")
+                    .font(.custom("Inter_18pt-Regular", size: 16))
             }
             .padding(.horizontal, 15)
             .padding(.vertical, 15)
@@ -206,6 +208,7 @@ struct CustomTextField: View {
     
     var body: some View {
         TextField("Search", text: $viewModel.search)
+            .font(.custom("Inter_18pt-Regular", size: 16))
             .safeAreaInset(edge: .leading) { Image(systemName: "magnifyingglass") }
             .padding(.all)
             .frame(height: 35)

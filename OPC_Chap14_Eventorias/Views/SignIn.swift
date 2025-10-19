@@ -43,7 +43,7 @@ struct SignIn: View {
                         } label: {
                             Text("Sign in")
                                 .foregroundStyle(.white)
-                                .font(.system(size: 16, weight: .semibold))
+                                .font(.custom("Inter_18pt-SemiBold", size: 16))
                         }
                         .frame(width: 100, height: 52)
                         .padding(.horizontal)
@@ -53,7 +53,7 @@ struct SignIn: View {
                         } label: {
                             Text("Sign up")
                                 .foregroundStyle(.white)
-                                .font(.system(size: 16, weight: .semibold))
+                                .font(.custom("Inter_18pt-SemiBold", size: 16))
                         }
                         .frame(width: 100, height: 52)
                         .padding(.horizontal)

@@ -8,11 +8,16 @@
 import Foundation
 import FirebaseAuth
 
-@Observable class AuthFirebase {
+protocol AuthFirebaseProtocol {
+    var isAuthenticated: Bool { get }
+    func logout()
+}
+
+@Observable class AuthFirebase: AuthFirebaseProtocol {
     var isAuthenticated: Bool = Auth.auth().currentUser != nil
     
     init() {
-        Auth.auth().addStateDidChangeListener { (_, user) in
+        let _ = Auth.auth().addStateDidChangeListener { (_, user) in
             if user == nil {
                 self.isAuthenticated = false
             } else {
@@ -21,17 +26,7 @@ import FirebaseAuth
         }
     }
     
-    var isAuth: Bool {
-        get {
-            return Auth.auth().currentUser != nil
-        }
-    }
-    
-    var email: String {
-        Auth.auth().currentUser?.email ?? "default-user"
-    }
-    
-    func logout() {
+    func logout() { // dev purpose
         do {
             try Auth.auth().signOut()
             isAuthenticated = false

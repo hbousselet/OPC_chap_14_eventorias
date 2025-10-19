@@ -14,7 +14,15 @@ import FirebaseStorage
 import CoreLocation
 import UIKit
 
-@Observable @MainActor class EventsViewModel {
+@MainActor
+protocol EventsProtocol {
+    func fetchEvents() async
+    func fetchEvent(with documentId: String) async
+    func getImage(name: String, isPortrait: Bool) -> UIImage
+    func sortingHit()
+}
+
+@Observable class EventsViewModel: EventsProtocol {
     private(set) var events: [EventModel] = []
     var search: String = ""
     var signOut: Bool = false
@@ -23,7 +31,7 @@ import UIKit
     var sorting: EventsSorting = .none
     var documentId: String?
     
-    let imageLoader = ImageLoader.shared
+    let imageLoader: LoaderProtocol
     
     var filteredEvents: [EventModel] {
         if search.isEmpty {
@@ -34,7 +42,8 @@ import UIKit
         }
     }
     
-    init(event: [EventModel]) {
+    init(event: [EventModel], imageLoader: LoaderProtocol = ImageLoader.shared) {
+        self.imageLoader = imageLoader
         self.events = events
     }
     
@@ -67,7 +76,6 @@ import UIKit
     }
     
     func fetchEvent(with documentId: String) async {
-        print("Fetch event called with document id: \(documentId)")
         do {
             try await withThrowingTaskGroup(of: Void.self) { [weak self] taskGroup in
                 let firestoreEvent = try await Event.fetchEvent(with: documentId)

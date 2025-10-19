@@ -9,9 +9,15 @@ import Foundation
 import FirebaseStorage
 import UIKit
 
-class ImageLoader {
+protocol LoaderProtocol {
+    func getImage(forKey key: String) -> UIImage?
+    func setImage(_ image: UIImage, forKey key: String)
+    func downloadImageWithUrl(from url: URL?, with name: String) async throws
+    func downloadImageWithPath(from path: String, with name: String) async throws
+}
+
+class ImageLoader: LoaderProtocol {
     static let shared = ImageLoader()
-    
     private let cache = NSCache<NSString, UIImage>()
     
     private init() {}
