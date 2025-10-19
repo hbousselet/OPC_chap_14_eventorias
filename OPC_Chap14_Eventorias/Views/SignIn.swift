@@ -35,8 +35,7 @@ struct SignIn: View {
                         Button {
                             Task {
                                 await viewModel.signIn()
-                                if viewModel.isAuthenticated {
-                                    firebase.isAuthenticated = true
+                                if firebase.isAuthenticated {
                                     dismiss()
                                 }
                             }

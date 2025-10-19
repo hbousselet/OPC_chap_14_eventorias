@@ -16,18 +16,24 @@ protocol UserProtocol {
     var user: User
     var alertIsPresented: Bool = false
     var alert: EventoriasAlerts? = Optional.none
+    var firebase: AuthFirebaseProtocol
     
-    init() {
-        let currentUser = Auth.auth().currentUser
-        user = User(name: "",
-                    email: currentUser?.email ?? "",
+    init(firebase: AuthFirebaseProtocol = AuthFirebase()) {
+        self.firebase = firebase
+        self.user = User(name: "",
+                    email: firebase.currentUser?.email ?? "",
                     icon: nil,
                     notification: false)
     }
     
     func fetchUser() async {
         do {
-            user = try await User.fetchUser(Auth.auth().currentUser!.uid)
+            guard let userid = firebase.currentUser?.uid else {
+                alertIsPresented = true
+                alert = .userDoesNotExist
+                return
+            }
+            user = try await User.fetchUser(userid)
         } catch {
             alertIsPresented = true
             alert = .notAbleToFetchUser(error: error)

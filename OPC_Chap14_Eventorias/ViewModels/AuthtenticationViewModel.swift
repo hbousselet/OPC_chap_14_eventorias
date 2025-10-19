@@ -19,9 +19,13 @@ import FirebaseAuth
     var email: String = ""
     var password: String = ""
     var name: String = ""
-    var isAuthenticated: Bool = false
     var alertIsPresented: Bool = false
     var alert: EventoriasAlerts? = Optional.none
+    var firebase: AuthFirebaseProtocol
+    
+    init(firebase: AuthFirebaseProtocol = AuthFirebase()) {
+        self.firebase = firebase
+    }
     
     func signIn() async {
         guard isValidEmail(email) else {
@@ -37,12 +41,10 @@ import FirebaseAuth
         }
         
         do {
-            _ = try await Auth.auth().signIn(withEmail: email, password: password)
-            isAuthenticated = true
+            _ = try await firebase.signIn(email: email, password: password)
         } catch {
             alertIsPresented = true
             alert = error as? EventoriasAlerts ?? EventoriasAlerts.notAbleToSignIn(error: error)
-            print(error)
         }
     }
     
@@ -65,9 +67,8 @@ import FirebaseAuth
                 return
             }
             
-            _ = try await Auth.auth().createUser(withEmail: email, password: password)
+            _ = try await firebase.createUser(email: email, password: password)
             try await populateUserInDb()
-            isAuthenticated = true
         } catch {
             alertIsPresented = true
             alert = error as? EventoriasAlerts ?? EventoriasAlerts.notAbleToSignUp
@@ -79,7 +80,7 @@ import FirebaseAuth
                         email: email,
                         icon: nil,
                         notification: false)
-        if let currentAuthUser = Auth.auth().currentUser {
+        if let currentAuthUser = firebase.currentUser {
             try await user.populateUser(currentAuthUser.uid)
         }
     }

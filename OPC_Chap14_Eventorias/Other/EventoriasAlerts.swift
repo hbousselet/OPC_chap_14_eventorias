@@ -26,6 +26,7 @@ enum EventoriasAlerts: Error {
     case emptyAddress
     case invalidAddress
     case failedEventCreation
+    case notAbleToExportImage(error: Error)
     case none
     
     var errorDescription: String? {
@@ -68,6 +69,8 @@ enum EventoriasAlerts: Error {
             return "The address you entered was not found. Please try again."
         case .failedEventCreation:
             return "Not able to create the event. Please retry in a few moments."
+        case .notAbleToExportImage(error: let error):
+            return "Not able to export image : \(error.localizedDescription)."
         }
     }
 }

@@ -65,6 +65,15 @@ struct EventsList: View {
                 await viewModel.fetchEvent(with: newValue)
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    firebase.signOut()
+                } label: {
+                    Text("deco")
+                }
+            }
+        }
         .navigationBarBackButtonHidden(true)
     }
     

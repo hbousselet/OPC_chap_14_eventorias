@@ -25,11 +25,10 @@ protocol EventsProtocol {
 @Observable class EventsViewModel: EventsProtocol {
     private(set) var events: [EventModel] = []
     var search: String = ""
-    var signOut: Bool = false
-    var alertIsPresented: Bool = false
-    var alert: EventoriasAlerts? = Optional.none
     var sorting: EventsSorting = .none
     var documentId: String?
+    var alertIsPresented: Bool = false
+    var alert: EventoriasAlerts? = Optional.none
     
     let imageLoader: LoaderProtocol
     
@@ -66,7 +65,6 @@ protocol EventsProtocol {
                         try await self?.imageLoader.downloadImageWithUrl(from: user.icon, with: user.email)
                         await MainActor.run { self?.events[index].profil = user }
                     }
-                    
                 }
             }
         } catch {

@@ -23,7 +23,6 @@ protocol EventCreationProtocol {
     var time: String = ""
     var address: String = ""
     var addressEnteredRequested: MKMapItem?
-    var imageName: String = ""
     var selectedImage: Data?
     var alertIsPresented: Bool = false
     var alert: EventoriasAlerts = .none
@@ -32,8 +31,10 @@ protocol EventCreationProtocol {
     
     var createdDocumentId: String?
     
-    var getCurrentUserId: String {
-        Auth.auth().currentUser?.uid ?? ""
+    var firebase: AuthFirebaseProtocol
+    
+    init(firebase: AuthFirebaseProtocol = AuthFirebase()) {
+        self.firebase = firebase
     }
     
     func createEvent() async {
@@ -63,9 +64,9 @@ protocol EventCreationProtocol {
             return
         }
         do {
-            await turnAddressToLocation()
+            try await turnAddressToLocation()
             try await uploadEvent(with: date)
-            await exportImage()
+            try await exportImage()
             dismiss = true
         } catch {
             alertIsPresented = true
@@ -79,7 +80,7 @@ protocol EventCreationProtocol {
             "description": description,
             "address": GeoPoint(latitude: addressEnteredRequested?.location.coordinate.latitude ?? 48.8575, longitude: addressEnteredRequested?.location.coordinate.longitude ?? 2.3514),
             "date": date,
-            "user": getCurrentUserId,
+            "user": firebase.currentUser?.uid ?? "",
             "image": title.removeSpacesAndLowercase(),
             "type": type?.rawValue ?? "other"
         ]
@@ -89,21 +90,18 @@ protocol EventCreationProtocol {
             createdDocumentId = newDocumentReference.documentID
             
         } catch {
-            print("Error adding document: \(error)")
             throw error
         }
     }
     
-    private func turnAddressToLocation() async {
+    private func turnAddressToLocation() async throws {
         if let request = MKGeocodingRequest(addressString: address) {
             do {
                 let mapitems = try await request.mapItems
                 if let mapitem = mapitems.first {
                     addressEnteredRequested = mapitem
-                    print("we found the following location: \(String(describing: addressEnteredRequested?.location.coordinate))")
                 }
             } catch let error {
-                print("error: \(error)")
                 alertIsPresented = true
                 alert = .invalidAddress
             }
@@ -116,7 +114,7 @@ protocol EventCreationProtocol {
         return df.date(from: date + " " + time)
     }
     
-    private func exportImage() async {
+    private func exportImage() async throws {
         guard let selectedImage,
         let uiImage = UIImage(data: selectedImage),
         let compressedData = uiImage.jpegData(compressionQuality: 0.5) else { return }
@@ -126,7 +124,8 @@ protocol EventCreationProtocol {
         do {
             let _ = try await imageRef.putDataAsync(compressedData, metadata: metadata)
         } catch {
-            print("Error: \(error)")
+            alertIsPresented = true
+            alert = .notAbleToExportImage(error: error)
         }
     }
 }

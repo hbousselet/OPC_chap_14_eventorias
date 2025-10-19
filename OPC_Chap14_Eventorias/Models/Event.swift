@@ -27,13 +27,12 @@ extension Event {
             var events: [Event] = []
             let eventsFetched = try await db.collection("Event").getDocuments()
             for event in eventsFetched.documents {
-                let ev = try event.data(as: Event.self)
-                events.append(ev)
+                let convertedEvent = try event.data(as: Event.self)
+                events.append(convertedEvent)
             }
             return events
             
         } catch {
-            print("Error getting documents: \(error)")
             throw EventoriasAlerts.notAbleToFetchEvents(error: error)
         }
     }
