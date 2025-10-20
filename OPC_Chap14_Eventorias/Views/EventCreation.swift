@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import FirebaseFirestore
 
 struct EventCreation: View {
     @Binding var isPresented: Bool

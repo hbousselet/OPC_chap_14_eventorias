@@ -23,12 +23,13 @@ struct EventModel: Identifiable, Equatable, Hashable {
     let user: String
     let address: Address
     let image: String
+    var imageUrl: URL?
     var profil: User?
     let type: EventType
     var canFetchEventImage: Bool = false
     
 
-    init(id: UUID, name: String, description: String, date: Date, user: String, address: Address, image: String, profil: User? = nil, type: EventType) {
+    init(id: UUID, name: String, description: String, date: Date, user: String, address: Address, image: String, imageUrl: URL? = nil, profil: User? = nil, type: EventType) {
         self.id = id
         self.name = name
         self.description = description
@@ -36,6 +37,7 @@ struct EventModel: Identifiable, Equatable, Hashable {
         self.user = user
         self.address = address
         self.image = image
+        self.imageUrl = imageUrl
         self.profil = profil
         self.type = type
     }

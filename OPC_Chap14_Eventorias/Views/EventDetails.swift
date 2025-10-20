@@ -29,10 +29,7 @@ struct EventDetails: View {
                 Color.systemBackground.ignoresSafeArea(.all)
                 ScrollView {
                     VStack(alignment: .leading) {
-                        Image(uiImage: viewModel.getImage(name: event.image))
-                            .resizable()
-                            .scaledToFill()
-                            .clipped()
+                        CustomImage(url: event.imageUrl, size: CGSize(width: geometry.size.width - 32, height: geometry.size.height / 3))
                             .frame(maxWidth: .infinity, alignment: .center)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                         dateInfo
@@ -80,11 +77,7 @@ struct EventDetails: View {
             }
             .font(.custom("Inter_18pt-Medium", size: 16))
             Spacer()
-            Image(uiImage: viewModel.getImage(name: event.profil?.email ?? "default-user", isPortrait: true))
-                .resizable()
-                .scaledToFill()
-                .clipped()
-                .frame(width: 60, height: 60)
+            CustomImage(url: event.profil?.icon, size: CGSize(width: 60, height: 60), isPortrait: true)
                 .clipShape(Circle())
         }
     }

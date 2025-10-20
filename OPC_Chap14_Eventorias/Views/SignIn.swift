@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SignIn: View {
-    @State var viewModel: AuthtenticationViewModel = AuthtenticationViewModel()
+    @State var viewModel: AuthenticationViewModel = AuthenticationViewModel()
     @State var presentSignUp: Bool = false
     @Environment(\.dismiss) var dismiss
     @Environment(AuthFirebase.self) private var firebase

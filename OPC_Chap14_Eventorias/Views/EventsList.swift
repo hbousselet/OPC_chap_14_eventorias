@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import SDWebImage
+import SDWebImageSwiftUI
 
 struct EventsList: View {
     @Environment(EventsViewModel.self) private var viewModel
@@ -148,7 +150,7 @@ struct EventsList: View {
     
     private func eventElement(_ event: EventModel, with size: CGSize) -> some View {
         HStack {
-            imageInCached(name: event.profil?.email ?? "",
+            CustomImage(url: event.profil?.icon,
                           size: CGSize(width: 40.0, height: 40.0),
                           isPortrait: true)
             .clipShape(.circle)
@@ -166,7 +168,7 @@ struct EventsList: View {
             .padding(.vertical, 16)
             .padding(.horizontal)
             Spacer()
-            imageInCached(name: event.image,
+            CustomImage(url: event.imageUrl,
                           size: CGSize(width: 136.0, height: 80.0))
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
@@ -201,14 +203,6 @@ struct EventsList: View {
         default:
             Image(systemName: "arrow.up.arrow.down")
         }
-    }
-    
-    private func imageInCached(name: String, size: CGSize, isPortrait: Bool = false) -> some View {
-        Image(uiImage: viewModel.getImage(name: name, isPortrait: isPortrait))
-            .resizable()
-            .scaledToFill()
-            .frame(width: size.width, height: size.height)
-            .clipped()
     }
 }
 

@@ -11,7 +11,6 @@ import FirebaseAuth
 protocol AuthFirebaseProtocol {
     var isAuthenticated: Bool { get }
     var currentUser: FirebaseAuth.User? { get }
-    func signOut()
     func signIn(email: String, password: String) async throws
     func createUser(email: String, password: String) async throws
 }
@@ -20,9 +19,9 @@ protocol AuthFirebaseProtocol {
     var currentUser: FirebaseAuth.User? {
         return Auth.auth().currentUser
     }
-    var currentUserId: String?
+    // mapper en créant un User différent de FirebaseAuth.User
     var isAuthenticated: Bool = Auth.auth().currentUser != nil
-    
+            
     init() {
         let _ = Auth.auth().addStateDidChangeListener { (_, user) in
             if user == nil {
@@ -37,7 +36,7 @@ protocol AuthFirebaseProtocol {
         do {
             try await Auth.auth().signIn(withEmail: email, password: password)
         } catch {
-            throw error
+            throw EventoriasAlerts.notAbleToSignIn
         }
     }
     
@@ -45,7 +44,7 @@ protocol AuthFirebaseProtocol {
         do {
             try await Auth.auth().createUser(withEmail: email, password: password)
         } catch {
-            throw error
+            throw EventoriasAlerts.notAbleToSignUp
         }
     }
     
@@ -58,5 +57,4 @@ protocol AuthFirebaseProtocol {
             print("Error at signout: \(error)")
         }
     }
-
 }

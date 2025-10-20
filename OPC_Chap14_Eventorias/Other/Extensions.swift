@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct CustoTextfield: View {
     var title: String
@@ -33,6 +34,28 @@ struct CustoTextfield: View {
         .padding(.leading, 16)
         .frame(width: size.width, height: size.height)
         .background(Color.textfieldBackground)
+    }
+}
+
+struct CustomImage: View {
+    let url: URL?
+    let size: CGSize
+    var isPortrait: Bool = false
+    
+    var body: some View {
+        WebImage(url: url) { image in
+            image.resizable()
+        } placeholder: {
+            if isPortrait {
+                Image("portrait-placeholder")
+            } else {
+                Image("image-placeholder")
+            }
+        }
+        .indicator(.activity)
+        .transition(.fade(duration: 0.5))
+        .scaledToFill()
+        .frame(width: size.width, height: size.height)
     }
 }
 

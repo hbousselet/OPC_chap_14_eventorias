@@ -15,7 +15,7 @@ import FirebaseAuth
 }
 
 
-@Observable class AuthtenticationViewModel: AutenticationProtocol {
+@Observable class AuthenticationViewModel: AutenticationProtocol {
     var email: String = ""
     var password: String = ""
     var name: String = ""
@@ -44,7 +44,7 @@ import FirebaseAuth
             _ = try await firebase.signIn(email: email, password: password)
         } catch {
             alertIsPresented = true
-            alert = error as? EventoriasAlerts ?? EventoriasAlerts.notAbleToSignIn(error: error)
+            alert = error as? EventoriasAlerts ?? EventoriasAlerts.notAbleToSignIn
         }
     }
     

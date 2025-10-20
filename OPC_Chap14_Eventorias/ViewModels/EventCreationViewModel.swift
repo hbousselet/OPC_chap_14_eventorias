@@ -31,10 +31,14 @@ protocol EventCreationProtocol {
     
     var createdDocumentId: String?
     
-    var firebase: AuthFirebaseProtocol
+    let firebase: AuthFirebaseProtocol
+//    let firestore: FirestoreProtocol
+//    var storage: StorageProtocol
     
     init(firebase: AuthFirebaseProtocol = AuthFirebase()) {
         self.firebase = firebase
+//        self.firestore = firestore
+//        self.storage = storage
     }
     
     func createEvent() async {
@@ -88,7 +92,6 @@ protocol EventCreationProtocol {
             let db = Firestore.firestore()
             let newDocumentReference = try await db.collection("Event").addDocument(data: event)
             createdDocumentId = newDocumentReference.documentID
-            
         } catch {
             throw error
         }
@@ -119,13 +122,16 @@ protocol EventCreationProtocol {
         let uiImage = UIImage(data: selectedImage),
         let compressedData = uiImage.jpegData(compressionQuality: 0.5) else { return }
         let imageRef = Storage.storage().reference().child("images/\(title.removeSpacesAndLowercase()).jpg")
+//        storage.child("images/\(title.removeSpacesAndLowercase()).jpg")
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpeg"
         do {
             let _ = try await imageRef.putDataAsync(compressedData, metadata: metadata)
+
+//            let _ = try await storage.putDataAsync(compressedData, metadata: metadata, onProgress: nil)
         } catch {
             alertIsPresented = true
-            alert = .notAbleToExportImage(error: error)
+            alert = .notAbleToExportImage
         }
     }
 }

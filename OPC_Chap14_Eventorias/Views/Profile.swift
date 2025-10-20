@@ -55,11 +55,7 @@ struct Profile: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Image(uiImage: eventViewModel.getImage(name: viewModel.user.email, isPortrait: true))
-                    .resizable()
-                    .scaledToFill()
-                    .clipped()
-                    .frame(width: 32, height: 32)
+                CustomImage(url: viewModel.user.icon, size: CGSize(width: 32, height: 32))
                     .clipShape(Circle())
             }
             ToolbarItem(placement: .topBarLeading) {

@@ -31,9 +31,8 @@ extension Event {
                 events.append(convertedEvent)
             }
             return events
-            
         } catch {
-            throw EventoriasAlerts.notAbleToFetchEvents(error: error)
+            throw EventoriasAlerts.notAbleToFetchEvents
         }
     }
     
@@ -45,7 +44,7 @@ extension Event {
             let event = try await docRef.getDocument(as: Event.self)
             return event
         } catch {
-            throw EventoriasAlerts.notAbleToFetchEvents(error: error)
+            throw EventoriasAlerts.notAbleToFetchEvents
         }
     }
     

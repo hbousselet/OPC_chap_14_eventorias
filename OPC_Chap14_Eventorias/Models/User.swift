@@ -44,7 +44,7 @@ extension User {
                 throw EventoriasAlerts.userDoesNotExist
             }
         } catch {
-            throw EventoriasAlerts.notAbleToFetchUser(error: error)
+            throw EventoriasAlerts.notAbleToFetchUser
         }
     }
 }

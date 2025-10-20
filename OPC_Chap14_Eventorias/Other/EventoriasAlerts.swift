@@ -7,14 +7,14 @@
 
 import Foundation
 
-enum EventoriasAlerts: Error {
-    case notAbleToFetchEvents(error: Error)
-    case notAbleToDownloadImage(error: Error)
-    case notAbleToFetchUser(error: Error)
+enum EventoriasAlerts: Error, Equatable {
+    case notAbleToFetchEvents
+    case notAbleToDownloadImage
+    case notAbleToFetchUser
     case userDoesNotExist
-    case notAbleToLoadUserImage(error: Error)
-    case notAbleToSignIn(error: Error)
-    case notAbleToPopulateUserInDb(error: Error)
+    case notAbleToLoadUserImage
+    case notAbleToSignIn
+    case notAbleToPopulateUserInDb
     case emptyPassword
     case emptyName
     case invalidEmail
@@ -26,27 +26,28 @@ enum EventoriasAlerts: Error {
     case emptyAddress
     case invalidAddress
     case failedEventCreation
-    case notAbleToExportImage(error: Error)
+    case notAbleToExportImage
+    case imageUrlNotFound
     case none
     
     var errorDescription: String? {
         switch self {
         case .none:
             return "No error"
-        case .notAbleToFetchEvents(error: let error):
-            return "Not able to fetch events : \(error.localizedDescription)"
-        case .notAbleToDownloadImage(error: let error):
-            return "Not able to download image : \(error.localizedDescription)"
-        case .notAbleToFetchUser(error: let error):
-            return "Not able to fetch user : \(error.localizedDescription)"
-        case .notAbleToLoadUserImage(error: let error):
-            return "Not able to load user's image : \(error.localizedDescription)"
+        case .notAbleToFetchEvents:
+            return "Not able to fetch events."
+        case .notAbleToDownloadImage:
+            return "Not able to download image."
+        case .notAbleToFetchUser:
+            return "Not able to fetch user."
+        case .notAbleToLoadUserImage:
+            return "Not able to load user's image."
         case .userDoesNotExist:
             return "User does not exist"
-        case .notAbleToSignIn(error: let error):
-            return "Not able to sign in : \(error.localizedDescription)"
-        case .notAbleToPopulateUserInDb(error: let error):
-            return "Not able to populate the user from authentication to db : \(error.localizedDescription)"
+        case .notAbleToSignIn:
+            return "Not able to sign in. Please retry."
+        case .notAbleToPopulateUserInDb:
+            return "Not able to populate the user from authentication to db."
         case .emptyPassword:
             return "Password is empty. Retry with a valid password."
         case .invalidEmail:
@@ -69,8 +70,10 @@ enum EventoriasAlerts: Error {
             return "The address you entered was not found. Please try again."
         case .failedEventCreation:
             return "Not able to create the event. Please retry in a few moments."
-        case .notAbleToExportImage(error: let error):
-            return "Not able to export image : \(error.localizedDescription)."
+        case .notAbleToExportImage:
+            return "Not able to export image."
+        case .imageUrlNotFound:
+            return "Image url not found."
         }
     }
 }

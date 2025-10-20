@@ -1,5 +1,5 @@
 //
-//  userViewModel.swift
+//  UserViewModel.swift
 //  OPC_Chap14_Eventorias
 //
 //  Created by Hugues BOUSSELET on 05/10/2025.
@@ -36,7 +36,7 @@ protocol UserProtocol {
             user = try await User.fetchUser(userid)
         } catch {
             alertIsPresented = true
-            alert = .notAbleToFetchUser(error: error)
+            alert = .notAbleToFetchUser
         }
     }
 }
