@@ -12,7 +12,7 @@ import Firebase
 
 final class AuthFirebaseMock: AuthFirebaseProtocol {
     var isAuthenticated: Bool = false
-    var currentUser: FirebaseAuth.User? = nil
+    var user: UserFirebase? = nil
     var shouldSuccess: Bool = true
     
     

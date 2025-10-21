@@ -10,16 +10,14 @@ import FirebaseAuth
 
 protocol AuthFirebaseProtocol {
     var isAuthenticated: Bool { get }
-    var currentUser: FirebaseAuth.User? { get }
+    var user: UserFirebase? { get }
     func signIn(email: String, password: String) async throws
     func createUser(email: String, password: String) async throws
 }
 
 @Observable class AuthFirebase: AuthFirebaseProtocol {
-    var currentUser: FirebaseAuth.User? {
-        return Auth.auth().currentUser
-    }
-    // mapper en créant un User différent de FirebaseAuth.User
+    var user: UserFirebase?
+    
     var isAuthenticated: Bool = Auth.auth().currentUser != nil
             
     init() {
@@ -28,6 +26,7 @@ protocol AuthFirebaseProtocol {
                 self.isAuthenticated = false
             } else {
                 self.isAuthenticated = true
+                self.user = try? self.createFirebaseUser()
             }
         }
     }
@@ -35,6 +34,7 @@ protocol AuthFirebaseProtocol {
     func signIn(email: String, password: String) async throws {
         do {
             try await Auth.auth().signIn(withEmail: email, password: password)
+            user = try createFirebaseUser()
         } catch {
             throw EventoriasAlerts.notAbleToSignIn
         }
@@ -43,9 +43,19 @@ protocol AuthFirebaseProtocol {
     func createUser(email: String, password: String) async throws {
         do {
             try await Auth.auth().createUser(withEmail: email, password: password)
+            user = try createFirebaseUser()
         } catch {
             throw EventoriasAlerts.notAbleToSignUp
         }
+    }
+    
+    func createFirebaseUser() throws -> UserFirebase {
+        guard let user = Auth.auth().currentUser,
+        let email = Auth.auth().currentUser?.email else {
+            throw EventoriasAlerts.notAbleToSignUp
+        }
+        
+        return UserFirebase(email: email, uid: user.uid)
     }
     
     
@@ -57,4 +67,9 @@ protocol AuthFirebaseProtocol {
             print("Error at signout: \(error)")
         }
     }
+}
+
+struct UserFirebase {
+    var email: String
+    var uid: String
 }

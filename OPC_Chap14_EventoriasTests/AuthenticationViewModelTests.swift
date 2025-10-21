@@ -85,7 +85,7 @@ final class AuthenticationViewModelTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Sign up ok")
         
         authFirebaseMock.shouldSuccess = true
-        authFirebaseMock.currentUser = FirebaseAuth.User(coder: NSCoder())
+        authFirebaseMock.user = nil
         let authViewModel = AuthenticationViewModel(firebase: authFirebaseMock)
         authViewModel.email = "test@test.com"
         authViewModel.password = "test"

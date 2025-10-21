@@ -80,7 +80,7 @@ import FirebaseAuth
                         email: email,
                         icon: nil,
                         notification: false)
-        if let currentAuthUser = firebase.currentUser {
+        if let currentAuthUser = firebase.user {
             try await user.populateUser(currentAuthUser.uid)
         }
     }

@@ -21,14 +21,14 @@ protocol UserProtocol {
     init(firebase: AuthFirebaseProtocol = AuthFirebase()) {
         self.firebase = firebase
         self.user = User(name: "",
-                    email: firebase.currentUser?.email ?? "",
+                    email: firebase.user?.email ?? "",
                     icon: nil,
                     notification: false)
     }
     
     func fetchUser() async {
         do {
-            guard let userid = firebase.currentUser?.uid else {
+            guard let userid = firebase.user?.uid else {
                 alertIsPresented = true
                 alert = .userDoesNotExist
                 return

@@ -84,7 +84,7 @@ protocol EventCreationProtocol {
             "description": description,
             "address": GeoPoint(latitude: addressEnteredRequested?.location.coordinate.latitude ?? 48.8575, longitude: addressEnteredRequested?.location.coordinate.longitude ?? 2.3514),
             "date": date,
-            "user": firebase.currentUser?.uid ?? "",
+            "user": firebase.user?.uid ?? "",
             "image": title.removeSpacesAndLowercase(),
             "type": type?.rawValue ?? "other"
         ]
