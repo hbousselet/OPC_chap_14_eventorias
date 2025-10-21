@@ -28,6 +28,7 @@ enum EventoriasAlerts: Error, Equatable {
     case failedEventCreation
     case notAbleToExportImage
     case imageUrlNotFound
+    case notAbleToCreateFirebaseUser
     case none
     
     var errorDescription: String? {
@@ -74,6 +75,8 @@ enum EventoriasAlerts: Error, Equatable {
             return "Not able to export image."
         case .imageUrlNotFound:
             return "Image url not found."
+        case .notAbleToCreateFirebaseUser:
+            return "Not able to create firebase user. Please try again."
         }
     }
 }

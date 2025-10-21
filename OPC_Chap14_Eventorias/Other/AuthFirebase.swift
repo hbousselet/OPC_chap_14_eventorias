@@ -52,9 +52,8 @@ protocol AuthFirebaseProtocol {
     func createFirebaseUser() throws -> UserFirebase {
         guard let user = Auth.auth().currentUser,
         let email = Auth.auth().currentUser?.email else {
-            throw EventoriasAlerts.notAbleToSignUp
+            throw EventoriasAlerts.notAbleToCreateFirebaseUser
         }
-        
         return UserFirebase(email: email, uid: user.uid)
     }
     
