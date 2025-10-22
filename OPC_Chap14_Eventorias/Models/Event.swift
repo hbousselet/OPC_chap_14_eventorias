@@ -9,7 +9,7 @@ import Foundation
 import FirebaseCore
 import FirebaseFirestore
 
-struct Event: Codable {
+struct Event: Codable, IdentifiableByString {
     let identifier: String?
     let address: GeoPoint?
     let date: Date
@@ -26,7 +26,7 @@ extension Event {
             let events: [Event] = try await firestoreService.multipleFetch()
             return events
         } catch {
-            throw EventoriasAlerts.notAbleToFetchEvents
+            throw EventoriasAlerts.failedMultiFetch
         }
     }
     
@@ -36,7 +36,7 @@ extension Event {
             let event: Event = try await firestoreService.uniqueFetch(id: documentId)
             return event
         } catch {
-            throw EventoriasAlerts.notAbleToFetchEvents
+            throw EventoriasAlerts.failedFetch
         }
     }
     

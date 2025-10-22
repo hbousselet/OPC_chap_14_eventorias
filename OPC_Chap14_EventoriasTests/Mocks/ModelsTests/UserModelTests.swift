@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import OPC_Chap14_Eventorias
 
 final class UserModelTests: XCTestCase {
 

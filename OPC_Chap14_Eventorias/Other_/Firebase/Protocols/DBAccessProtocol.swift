@@ -14,5 +14,5 @@ protocol DBAccessProtocol {
     
     func create(data: [String : Any], to id: String?) async throws -> String?
     func multipleFetch<T: Decodable>() async throws -> [T]
-    func uniqueFetch<T: Decodable>(id: String) async throws -> T
+    func uniqueFetch<T: Decodable & IdentifiableByString>(id: String) async throws -> T
 }
