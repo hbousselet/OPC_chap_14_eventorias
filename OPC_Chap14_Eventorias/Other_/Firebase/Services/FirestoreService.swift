@@ -8,15 +8,6 @@
 import Foundation
 import FirebaseFirestore
 
-protocol DBAccessProtocol {
-    associatedtype DBService
-    var dbService: DBService { get }
-    
-    func create(data: [String : Any], to id: String?) async throws -> String?
-    func multipleFetch<T: Decodable>() async throws -> [T]
-    func uniqueFetch<T: Decodable>(id: String) async throws -> T
-}
-
 class FirestoreService: DBAccessProtocol {
     var dbService: Firestore = Firestore.firestore()
     typealias DBService = Firestore
@@ -37,7 +28,7 @@ class FirestoreService: DBAccessProtocol {
                 return newDocumentRef.documentID
             }
         } catch {
-            throw EventoriasAlerts.failedEventCreation
+            throw EventoriasAlerts.failedCreate
         }
     }
     
@@ -51,7 +42,7 @@ class FirestoreService: DBAccessProtocol {
             }
             return finalT
         } catch {
-            throw EventoriasAlerts.notAbleToFetchUser
+            throw EventoriasAlerts.failedMultiFetch
         }
     }
     
@@ -60,7 +51,7 @@ class FirestoreService: DBAccessProtocol {
         do {
             return try await documentReference.getDocument(as: T.self)
         } catch {
-            throw EventoriasAlerts.notAbleToFetchEvents
+            throw EventoriasAlerts.failedFetch
         }
     }
 }

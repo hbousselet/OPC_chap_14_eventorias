@@ -8,17 +8,6 @@
 import Foundation
 import FirebaseStorage
 
-protocol StorageProtocol {
-    func child(_ path: String)
-    func putDataAsync(
-        _ uploadData: Data,
-        metadata: StorageMetadata?,
-        onProgress: ((Progress?) -> Void)?
-    ) async throws -> StorageMetadata
-    func downloadURL() async throws -> URL
-    var storageReference: StorageReference { get set }
-}
-
 class StorageService: StorageProtocol {
     func downloadURL() async throws -> URL {
         try await storageReference.downloadURL()

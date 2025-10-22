@@ -121,13 +121,10 @@ protocol EventCreationProtocol {
         guard let selectedImage,
         let uiImage = UIImage(data: selectedImage),
         let compressedData = uiImage.jpegData(compressionQuality: 0.5) else { return }
-//        let imageRef = Storage.storage().reference().child("images/\(title.removeSpacesAndLowercase()).jpg")
         storage.child("images/\(title.removeSpacesAndLowercase()).jpg")
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpeg"
         do {
-//            let _ = try await imageRef.putDataAsync(compressedData, metadata: metadata)
-
             let _ = try await storage.putDataAsync(compressedData, metadata: metadata, onProgress: nil)
         } catch {
             alertIsPresented = true

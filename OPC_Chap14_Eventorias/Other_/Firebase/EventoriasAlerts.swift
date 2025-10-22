@@ -25,6 +25,9 @@ enum EventoriasAlerts: Error, Equatable {
     case emptyDescription
     case emptyAddress
     case invalidAddress
+    case failedCreate
+    case failedMultiFetch
+    case failedFetch
     case failedEventCreation
     case notAbleToExportImage
     case imageUrlNotFound
@@ -77,6 +80,12 @@ enum EventoriasAlerts: Error, Equatable {
             return "Image url not found."
         case .notAbleToCreateFirebaseUser:
             return "Not able to create firebase user. Please try again."
+        case .failedCreate:
+            return "Failed to create the object and to store it in database."
+        case .failedMultiFetch:
+            return "Failed to fetch multiple objects."
+        case .failedFetch:
+            return "Failed to fetch the object."
         }
     }
 }

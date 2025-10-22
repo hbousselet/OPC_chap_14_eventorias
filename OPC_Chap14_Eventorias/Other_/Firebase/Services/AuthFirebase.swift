@@ -8,16 +8,9 @@
 import Foundation
 import FirebaseAuth
 
-protocol AuthFirebaseProtocol {
-    var isAuthenticated: Bool { get }
-    var currentUser: AuthUser? {get}
-    func signIn(email: String, password: String) async throws
-    func createUser(email: String, password: String) async throws
-}
-
 @Observable class FirebaseService: AuthFirebaseProtocol {
     private var auth = Auth.auth()
-    var currentUser: AuthUser? {
+    var currentUser: AuthUserProtocol? {
         return auth.currentUser
     }
     
@@ -57,8 +50,4 @@ protocol AuthFirebaseProtocol {
             print("Error at signout: \(error)")
         }
     }
-}
-
-protocol AuthCusto {
-    
 }
