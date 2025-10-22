@@ -17,10 +17,10 @@ protocol UserProtocol {
     var alertIsPresented: Bool = false
     var alert: EventoriasAlerts? = Optional.none
     var firebase: AuthFirebaseProtocol
-    let firestore: FirestoreProtocol
+    let firestore: any DBAccessProtocol
     
     init(firebase: AuthFirebaseProtocol = FirebaseService(),
-         firestore: FirestoreProtocol = FirestoreService(collection: "User")) {
+         firestore: any DBAccessProtocol = FirestoreService(collection: "User")) {
         self.firebase = firebase
         self.firestore = firestore
         self.user = UserFirestore(name: "",

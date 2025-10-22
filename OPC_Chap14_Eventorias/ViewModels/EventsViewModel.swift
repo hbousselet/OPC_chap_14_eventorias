@@ -29,8 +29,8 @@ protocol EventsProtocol {
     var alertIsPresented: Bool = false
     var alert: EventoriasAlerts? = Optional.none
     
-    let eventFirestore: FirestoreProtocol
-    let userFirestore: FirestoreProtocol
+    let eventFirestore: any DBAccessProtocol
+    let userFirestore: any DBAccessProtocol
     let storage: StorageProtocol
 
 
@@ -45,8 +45,8 @@ protocol EventsProtocol {
     }
     
     init(event: [EventModel],
-         eventFirestore: FirestoreProtocol = FirestoreService(collection: "Event"),
-         userFirestore: FirestoreProtocol = FirestoreService(collection: "User"),
+         eventFirestore: any DBAccessProtocol = FirestoreService(collection: "Event"),
+         userFirestore: any DBAccessProtocol = FirestoreService(collection: "User"),
          storage: StorageProtocol = StorageService()) {
         self.eventFirestore = eventFirestore
         self.userFirestore = userFirestore

@@ -8,35 +8,59 @@
 import Foundation
 import FirebaseFirestore
 
-protocol FirestoreProtocol {
-    func getDocuments() async throws -> QuerySnapshot
-    func setData(_ documentData: [String : Any]) async throws
-    func document(_ documentPath: String) -> DocumentReference
-    func addDocument(data: [String : Any]) async throws -> DocumentReference
+protocol DBAccessProtocol {
+    associatedtype DBService
+    var dbService: DBService { get }
+    
+    func create(data: [String : Any], to id: String?) async throws -> String?
+    func multipleFetch<T: Decodable>() async throws -> [T]
+    func uniqueFetch<T: Decodable>(id: String) async throws -> T
 }
 
-class FirestoreService: FirestoreProtocol {
-    func getDocuments() async throws -> QuerySnapshot {
-        return try await db.collection(collection).getDocuments()
-    }
+class FirestoreService: DBAccessProtocol {
+    var dbService: Firestore = Firestore.firestore()
+    typealias DBService = Firestore
     
-    func setData(_ documentData: [String : Any]) async throws {
-        return try await db.collection(collection).document(documentId).setData(documentData)
-    }
-    
-    func document(_ documentPath: String) -> DocumentReference {
-        return db.collection(collection).document(documentPath)
-    }
-    
-    func addDocument(data: [String : Any]) async throws -> DocumentReference {
-        return try await db.collection(collection).addDocument(data: data)
-    }
-    
-    private let db = Firestore.firestore()
     var collection: String
-    var documentId: String = ""
     
-    init(collection: String) {
+    init(collection: String,) {
         self.collection = collection
+    }
+    
+    func create(data: [String : Any], to id: String? = nil) async throws -> String? {
+        do {
+            if let id {
+                try await dbService.collection(collection).document(id).setData(data)
+                return nil
+            } else {
+                let newDocumentRef = try await dbService.collection(collection).addDocument(data: data)
+                return newDocumentRef.documentID
+            }
+        } catch {
+            throw EventoriasAlerts.failedEventCreation
+        }
+    }
+    
+    func multipleFetch<T: Decodable>() async throws -> [T] {
+        var finalT: [T] = []
+        do {
+            let fetchedT = try await dbService.collection(collection).getDocuments()
+            for element in fetchedT.documents {
+                let decodedElement = try element.data(as: T.self)
+                finalT.append(decodedElement)
+            }
+            return finalT
+        } catch {
+            throw EventoriasAlerts.notAbleToFetchUser
+        }
+    }
+    
+    func uniqueFetch<T: Decodable>(id: String) async throws -> T {
+        let documentReference = dbService.collection(collection).document(id)
+        do {
+            return try await documentReference.getDocument(as: T.self)
+        } catch {
+            throw EventoriasAlerts.notAbleToFetchEvents
+        }
     }
 }

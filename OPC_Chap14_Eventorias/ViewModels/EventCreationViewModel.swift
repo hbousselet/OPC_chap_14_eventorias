@@ -32,11 +32,11 @@ protocol EventCreationProtocol {
     var createdDocumentId: String?
     
     let firebase: AuthFirebaseProtocol
-    let firestore: FirestoreProtocol
+    let firestore: any DBAccessProtocol
     let storage: StorageProtocol
     
     init(firebase: AuthFirebaseProtocol = FirebaseService(),
-         firestore: FirestoreProtocol = FirestoreService(collection: "Event"),
+         firestore: any DBAccessProtocol = FirestoreService(collection: "Event"),
          storage: StorageProtocol = StorageService()) {
         self.firebase = firebase
         self.firestore = firestore
@@ -91,8 +91,7 @@ protocol EventCreationProtocol {
             "type": type?.rawValue ?? "other"
         ]
         do {
-            let newDocumentReference = try await firestore.addDocument(data: event)
-            createdDocumentId = newDocumentReference.documentID
+            createdDocumentId = try await firestore.create(data: event, to: nil)
         } catch {
             throw error
         }

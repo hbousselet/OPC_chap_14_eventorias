@@ -17,30 +17,22 @@ struct UserFirestore: Codable, Equatable, Hashable {
 }
 
 extension UserFirestore {
-    func populateUser(_ documentId: String, firestoreService: FirestoreProtocol = FirestoreService(collection: "User")) async throws {
+    func populateUser(_ documentId: String, firestoreService: any DBAccessProtocol) async throws {
         do {
-            try await firestoreService.document(documentId).setData([
+            try await firestoreService.create(data: [
                 "name": name,
                 "email": email,
                 "icon": icon ?? "",
                 "notification": notification
-            ])
+            ], to: documentId)
         } catch {
             throw error
         }
     }
     
-    static func fetchUser(_ userId: String, firestoreService: FirestoreProtocol = FirestoreService(collection: "User")) async throws -> Self {
+    static func fetchUser(_ userId: String, firestoreService: any DBAccessProtocol) async throws -> Self {
         do {
-            let docRef = firestoreService.document(userId)
-
-            let document = try await docRef.getDocument()
-            if document.exists {
-                let user = try document.data(as: UserFirestore.self)
-                return user
-            } else {
-                throw EventoriasAlerts.userDoesNotExist
-            }
+            return try await firestoreService.uniqueFetch(id: userId)
         } catch {
             throw EventoriasAlerts.notAbleToFetchUser
         }
