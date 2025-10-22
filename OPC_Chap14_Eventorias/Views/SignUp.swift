@@ -10,7 +10,7 @@ import SwiftUI
 struct SignUp: View {
     @State var viewModel: AuthenticationViewModel = AuthenticationViewModel()
     @Environment(\.dismiss) var dismiss
-    @Environment(AuthFirebase.self) private var firebase
+    @Environment(FirebaseService.self) private var firebase
 
     var body: some View {
         ZStack(alignment: .top) {

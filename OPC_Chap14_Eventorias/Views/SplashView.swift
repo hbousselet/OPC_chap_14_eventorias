@@ -10,7 +10,7 @@ import FirebaseAuth
 
 struct SplashView: View {
     @State var presentSignInView: Bool = false
-    @State private var firebaseAuth: AuthFirebase = AuthFirebase()
+    @State private var firebaseAuth: FirebaseService = FirebaseService()
     
     var body: some View {
         ZStack(alignment: .top) {

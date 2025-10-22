@@ -1,5 +1,5 @@
 //
-//  StorageEventorias.swift
+//  StorageService.swift
 //  OPC_Chap14_Eventorias
 //
 //  Created by Hugues BOUSSELET on 20/10/2025.
@@ -15,10 +15,15 @@ protocol StorageProtocol {
         metadata: StorageMetadata?,
         onProgress: ((Progress?) -> Void)?
     ) async throws -> StorageMetadata
+    func downloadURL() async throws -> URL
     var storageReference: StorageReference { get set }
 }
 
-class StorageEventorias: StorageProtocol {
+class StorageService: StorageProtocol {
+    func downloadURL() async throws -> URL {
+        try await storageReference.downloadURL()
+    }
+    
     func child(_ path: String) {
         storageReference = reference.child(path)
     }

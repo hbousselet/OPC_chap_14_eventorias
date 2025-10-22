@@ -10,7 +10,7 @@ import FirebaseAuth
 
 struct ContentView: View {
     @State var navPath = NavigationPath()
-    @State private var firebaseAuth: AuthFirebase = AuthFirebase()
+    @State private var firebaseAuth: FirebaseService = FirebaseService()
     
     var body: some View {
         if firebaseAuth.isAuthenticated {

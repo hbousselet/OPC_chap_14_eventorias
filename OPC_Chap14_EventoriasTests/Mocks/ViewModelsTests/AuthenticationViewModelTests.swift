@@ -19,6 +19,7 @@ final class AuthenticationViewModelTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
+        authFirebaseMock.currentUser = nil
         authFirebaseMock.isAuthenticated = false
         authFirebaseMock.shouldSuccess = false
     }
@@ -34,6 +35,7 @@ final class AuthenticationViewModelTests: XCTestCase {
         
         await authViewModel.signIn()
         XCTAssertTrue(authFirebaseMock.isAuthenticated)
+        XCTAssertTrue((authFirebaseMock.currentUser as! DummyUser).email == "test@test.com")
     }
     
     @MainActor
@@ -85,7 +87,6 @@ final class AuthenticationViewModelTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Sign up ok")
         
         authFirebaseMock.shouldSuccess = true
-        authFirebaseMock.user = nil
         let authViewModel = AuthenticationViewModel(firebase: authFirebaseMock)
         authViewModel.email = "test@test.com"
         authViewModel.password = "test"
@@ -93,6 +94,7 @@ final class AuthenticationViewModelTests: XCTestCase {
         
         await authViewModel.signUp()
         XCTAssertTrue(authFirebaseMock.isAuthenticated)
+        XCTAssertTrue((authFirebaseMock.currentUser as! DummyUser).email == "test@test.com")
     }
     
     @MainActor

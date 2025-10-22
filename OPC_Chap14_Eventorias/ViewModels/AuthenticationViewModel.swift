@@ -21,10 +21,13 @@ import FirebaseAuth
     var name: String = ""
     var alertIsPresented: Bool = false
     var alert: EventoriasAlerts? = Optional.none
-    var firebase: AuthFirebaseProtocol
+    let firebase: AuthFirebaseProtocol
+    let firestore: FirestoreProtocol
     
-    init(firebase: AuthFirebaseProtocol = AuthFirebase()) {
+    init(firebase: AuthFirebaseProtocol = FirebaseService(),
+         firestore: FirestoreProtocol = FirestoreService(collection: "User")) {
         self.firebase = firebase
+        self.firestore = firestore
     }
     
     func signIn() async {
@@ -76,12 +79,12 @@ import FirebaseAuth
     }
     
     private func populateUserInDb() async throws {
-        let user = User(name: name,
+        let user = UserFirestore(name: name,
                         email: email,
                         icon: nil,
                         notification: false)
-        if let currentAuthUser = firebase.user {
-            try await user.populateUser(currentAuthUser.uid)
+        if let currentAuthUser = firebase.currentUser {
+            try await user.populateUser(currentAuthUser.uid, firestoreService: firestore)
         }
     }
     

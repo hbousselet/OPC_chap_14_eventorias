@@ -32,13 +32,15 @@ protocol EventCreationProtocol {
     var createdDocumentId: String?
     
     let firebase: AuthFirebaseProtocol
-//    let firestore: FirestoreProtocol
-//    var storage: StorageProtocol
+    let firestore: FirestoreProtocol
+    let storage: StorageProtocol
     
-    init(firebase: AuthFirebaseProtocol = AuthFirebase()) {
+    init(firebase: AuthFirebaseProtocol = FirebaseService(),
+         firestore: FirestoreProtocol = FirestoreService(collection: "Event"),
+         storage: StorageProtocol = StorageService()) {
         self.firebase = firebase
-//        self.firestore = firestore
-//        self.storage = storage
+        self.firestore = firestore
+        self.storage = storage
     }
     
     func createEvent() async {
@@ -84,13 +86,12 @@ protocol EventCreationProtocol {
             "description": description,
             "address": GeoPoint(latitude: addressEnteredRequested?.location.coordinate.latitude ?? 48.8575, longitude: addressEnteredRequested?.location.coordinate.longitude ?? 2.3514),
             "date": date,
-            "user": firebase.user?.uid ?? "",
+            "user": firebase.currentUser?.uid ?? "",
             "image": title.removeSpacesAndLowercase(),
             "type": type?.rawValue ?? "other"
         ]
         do {
-            let db = Firestore.firestore()
-            let newDocumentReference = try await db.collection("Event").addDocument(data: event)
+            let newDocumentReference = try await firestore.addDocument(data: event)
             createdDocumentId = newDocumentReference.documentID
         } catch {
             throw error
@@ -104,7 +105,7 @@ protocol EventCreationProtocol {
                 if let mapitem = mapitems.first {
                     addressEnteredRequested = mapitem
                 }
-            } catch let error {
+            } catch {
                 alertIsPresented = true
                 alert = .invalidAddress
             }
@@ -121,14 +122,14 @@ protocol EventCreationProtocol {
         guard let selectedImage,
         let uiImage = UIImage(data: selectedImage),
         let compressedData = uiImage.jpegData(compressionQuality: 0.5) else { return }
-        let imageRef = Storage.storage().reference().child("images/\(title.removeSpacesAndLowercase()).jpg")
-//        storage.child("images/\(title.removeSpacesAndLowercase()).jpg")
+//        let imageRef = Storage.storage().reference().child("images/\(title.removeSpacesAndLowercase()).jpg")
+        storage.child("images/\(title.removeSpacesAndLowercase()).jpg")
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpeg"
         do {
-            let _ = try await imageRef.putDataAsync(compressedData, metadata: metadata)
+//            let _ = try await imageRef.putDataAsync(compressedData, metadata: metadata)
 
-//            let _ = try await storage.putDataAsync(compressedData, metadata: metadata, onProgress: nil)
+            let _ = try await storage.putDataAsync(compressedData, metadata: metadata, onProgress: nil)
         } catch {
             alertIsPresented = true
             alert = .notAbleToExportImage

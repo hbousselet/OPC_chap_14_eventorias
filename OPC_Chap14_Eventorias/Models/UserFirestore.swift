@@ -9,18 +9,17 @@ import Foundation
 import FirebaseCore
 import FirebaseFirestore
 
-struct User: Codable, Equatable, Hashable {
+struct UserFirestore: Codable, Equatable, Hashable {
     var name: String
     var email: String
     let icon: URL?
     var notification: Bool
 }
 
-extension User {
-    func populateUser(_ documentId: String) async throws {
+extension UserFirestore {
+    func populateUser(_ documentId: String, firestoreService: FirestoreProtocol = FirestoreService(collection: "User")) async throws {
         do {
-            let db = Firestore.firestore()
-            try await db.collection("User").document(documentId).setData([
+            try await firestoreService.document(documentId).setData([
                 "name": name,
                 "email": email,
                 "icon": icon ?? "",
@@ -31,14 +30,13 @@ extension User {
         }
     }
     
-    static func fetchUser(_ userId: String) async throws -> Self {
+    static func fetchUser(_ userId: String, firestoreService: FirestoreProtocol = FirestoreService(collection: "User")) async throws -> Self {
         do {
-            let db = Firestore.firestore()
-            let docRef = db.collection("User").document(userId)
+            let docRef = firestoreService.document(userId)
 
             let document = try await docRef.getDocument()
             if document.exists {
-                let user = try document.data(as: User.self)
+                let user = try document.data(as: UserFirestore.self)
                 return user
             } else {
                 throw EventoriasAlerts.userDoesNotExist

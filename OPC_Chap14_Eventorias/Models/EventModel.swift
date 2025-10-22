@@ -24,12 +24,12 @@ struct EventModel: Identifiable, Equatable, Hashable {
     let address: Address
     let image: String
     var imageUrl: URL?
-    var profil: User?
+    var profil: UserFirestore?
     let type: EventType
     var canFetchEventImage: Bool = false
     
 
-    init(id: UUID, name: String, description: String, date: Date, user: String, address: Address, image: String, imageUrl: URL? = nil, profil: User? = nil, type: EventType) {
+    init(id: UUID, name: String, description: String, date: Date, user: String, address: Address, image: String, imageUrl: URL? = nil, profil: UserFirestore? = nil, type: EventType) {
         self.id = id
         self.name = name
         self.description = description

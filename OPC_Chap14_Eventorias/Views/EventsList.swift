@@ -11,7 +11,7 @@ import SDWebImageSwiftUI
 
 struct EventsList: View {
     @Environment(EventsViewModel.self) private var viewModel
-    @Environment(AuthFirebase.self) private var firebase
+    @Environment(FirebaseService.self) private var firebase
 
     @State var isNavigating: Bool = false
     

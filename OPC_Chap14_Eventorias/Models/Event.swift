@@ -21,11 +21,11 @@ struct Event: Codable {
 }
 
 extension Event {
-    static func fetchEvents() async throws -> [Event] {
+    static func fetchEvents(firestoreService: FirestoreProtocol = FirestoreService(collection: "Event")) async throws -> [Event] {
         let db = Firestore.firestore()
         do {
             var events: [Event] = []
-            let eventsFetched = try await db.collection("Event").getDocuments()
+            let eventsFetched = try await firestoreService.getDocuments()
             for event in eventsFetched.documents {
                 let convertedEvent = try event.data(as: Event.self)
                 events.append(convertedEvent)
@@ -36,9 +36,9 @@ extension Event {
         }
     }
     
-    static func fetchEvent(with documentId: String) async throws -> Event {
-        let db = Firestore.firestore()
-        let docRef = db.collection("Event").document(documentId)
+    static func fetchEvent(with documentId: String,
+                           firestoreService: FirestoreProtocol = FirestoreService(collection: "Event")) async throws -> Event {
+        let docRef = firestoreService.document(documentId)
         
         do {
             let event = try await docRef.getDocument(as: Event.self)

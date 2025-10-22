@@ -12,13 +12,14 @@ import Firebase
 
 final class AuthFirebaseMock: AuthFirebaseProtocol {
     var isAuthenticated: Bool = false
-    var user: UserFirebase? = nil
+    var currentUser: AuthUser? = nil
     var shouldSuccess: Bool = true
     
     
     func signIn(email: String, password: String) async throws {
         if shouldSuccess {
             isAuthenticated = true
+            currentUser = DummyUser(uid: "test", email: email)
         } else {
             throw EventoriasAlerts.notAbleToSignIn
         }
@@ -27,8 +28,15 @@ final class AuthFirebaseMock: AuthFirebaseProtocol {
     func createUser(email: String, password: String) async throws {
         if shouldSuccess {
             isAuthenticated = true
+            currentUser = DummyUser(uid: "test", email: email)
         } else {
             throw EventoriasAlerts.notAbleToSignUp
         }
     }
+}
+struct DummyUser: AuthUser {
+    var uid: String
+    var displayName: String?
+    var email: String?
+    var photoURL: URL?
 }

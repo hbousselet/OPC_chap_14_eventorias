@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Home: View {
-    @Environment(AuthFirebase.self) private var firebase
+    @Environment(FirebaseService.self) private var firebase
     @SceneStorage("selectedTab") private var selectedTabIndex = 0
     
     @State private var eventViewModel: EventsViewModel = EventsViewModel(event: [])

@@ -28,6 +28,12 @@ protocol EventsProtocol {
     var documentId: String?
     var alertIsPresented: Bool = false
     var alert: EventoriasAlerts? = Optional.none
+    
+    let eventFirestore: FirestoreProtocol
+    let userFirestore: FirestoreProtocol
+    let storage: StorageProtocol
+
+
         
     var filteredEvents: [EventModel] {
         if search.isEmpty {
@@ -38,17 +44,23 @@ protocol EventsProtocol {
         }
     }
     
-    init(event: [EventModel]) {
+    init(event: [EventModel],
+         eventFirestore: FirestoreProtocol = FirestoreService(collection: "Event"),
+         userFirestore: FirestoreProtocol = FirestoreService(collection: "User"),
+         storage: StorageProtocol = StorageService()) {
+        self.eventFirestore = eventFirestore
+        self.userFirestore = userFirestore
+        self.storage = storage
         self.events = events
     }
         
     func fetchEvents() async {
         do {
-                let firestoreEvents = try await Event.fetchEvents()
+                let firestoreEvents = try await Event.fetchEvents(firestoreService: eventFirestore)
                 let convertedEvents: [EventModel] = firestoreEvents.compactMap { $0.convert() }
                 
             for (index, event) in convertedEvents.enumerated() {
-                let user = try await User.fetchUser(event.user)
+                let user = try await UserFirestore.fetchUser(event.user, firestoreService: userFirestore)
                 let imageUrl = try await retrieveImageUrl(of: event.image)
                 events.append(event)
                 events[index].profil = user
@@ -61,9 +73,9 @@ protocol EventsProtocol {
     }
     
     private func retrieveImageUrl(of path: String) async throws -> URL? {
-        let imageRef = Storage.storage().reference().child("images/\(path).jpg")
+        storage.child("images/\(path).jpg")
         do {
-            return try await imageRef.downloadURL()
+            return try await storage.downloadURL()
         } catch {
             throw EventoriasAlerts.imageUrlNotFound
         }
@@ -71,9 +83,9 @@ protocol EventsProtocol {
     
     func fetchEvent(with documentId: String) async {
         do {
-            let firestoreEvent = try await Event.fetchEvent(with: documentId)
+            let firestoreEvent = try await Event.fetchEvent(with: documentId, firestoreService: eventFirestore)
             var convertedEvent: EventModel = firestoreEvent.convert()
-            let user = try await User.fetchUser(convertedEvent.user)
+            let user = try await UserFirestore.fetchUser(convertedEvent.user, firestoreService: userFirestore)
             let imageUrl = try await retrieveImageUrl(of: convertedEvent.image)
             convertedEvent.profil = user
             convertedEvent.imageUrl = imageUrl

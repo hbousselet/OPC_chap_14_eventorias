@@ -1,5 +1,5 @@
 //
-//  Firestore.swift
+//  FirestoreService.swift
 //  OPC_Chap14_Eventorias
 //
 //  Created by Hugues BOUSSELET on 20/10/2025.

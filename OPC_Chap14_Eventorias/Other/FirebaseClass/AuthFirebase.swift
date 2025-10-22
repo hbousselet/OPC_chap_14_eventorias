@@ -10,13 +10,16 @@ import FirebaseAuth
 
 protocol AuthFirebaseProtocol {
     var isAuthenticated: Bool { get }
-    var user: UserFirebase? { get }
+    var currentUser: AuthUser? {get}
     func signIn(email: String, password: String) async throws
     func createUser(email: String, password: String) async throws
 }
 
-@Observable class AuthFirebase: AuthFirebaseProtocol {
-    var user: UserFirebase?
+@Observable class FirebaseService: AuthFirebaseProtocol {
+    private var auth = Auth.auth()
+    var currentUser: AuthUser? {
+        return auth.currentUser
+    }
     
     var isAuthenticated: Bool = Auth.auth().currentUser != nil
             
@@ -26,7 +29,6 @@ protocol AuthFirebaseProtocol {
                 self.isAuthenticated = false
             } else {
                 self.isAuthenticated = true
-                self.user = try? self.createFirebaseUser()
             }
         }
     }
@@ -34,7 +36,6 @@ protocol AuthFirebaseProtocol {
     func signIn(email: String, password: String) async throws {
         do {
             try await Auth.auth().signIn(withEmail: email, password: password)
-            user = try createFirebaseUser()
         } catch {
             throw EventoriasAlerts.notAbleToSignIn
         }
@@ -43,24 +44,14 @@ protocol AuthFirebaseProtocol {
     func createUser(email: String, password: String) async throws {
         do {
             try await Auth.auth().createUser(withEmail: email, password: password)
-            user = try createFirebaseUser()
         } catch {
             throw EventoriasAlerts.notAbleToSignUp
         }
     }
     
-    func createFirebaseUser() throws -> UserFirebase {
-        guard let user = Auth.auth().currentUser,
-        let email = Auth.auth().currentUser?.email else {
-            throw EventoriasAlerts.notAbleToCreateFirebaseUser
-        }
-        return UserFirebase(email: email, uid: user.uid)
-    }
-    
-    
     func signOut() { // dev purpose
         do {
-            try Auth.auth().signOut()
+            try auth.signOut()
             isAuthenticated = false
         } catch {
             print("Error at signout: \(error)")
@@ -68,7 +59,6 @@ protocol AuthFirebaseProtocol {
     }
 }
 
-struct UserFirebase {
-    var email: String
-    var uid: String
+protocol AuthCusto {
+    
 }

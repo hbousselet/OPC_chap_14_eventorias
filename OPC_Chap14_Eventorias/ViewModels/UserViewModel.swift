@@ -13,27 +13,30 @@ protocol UserProtocol {
 }
 
 @Observable class UserViewModel: UserProtocol {
-    var user: User
+    var user: UserFirestore
     var alertIsPresented: Bool = false
     var alert: EventoriasAlerts? = Optional.none
     var firebase: AuthFirebaseProtocol
+    let firestore: FirestoreProtocol
     
-    init(firebase: AuthFirebaseProtocol = AuthFirebase()) {
+    init(firebase: AuthFirebaseProtocol = FirebaseService(),
+         firestore: FirestoreProtocol = FirestoreService(collection: "User")) {
         self.firebase = firebase
-        self.user = User(name: "",
-                    email: firebase.user?.email ?? "",
+        self.firestore = firestore
+        self.user = UserFirestore(name: "",
+                    email: firebase.currentUser?.email ?? "",
                     icon: nil,
                     notification: false)
     }
     
     func fetchUser() async {
         do {
-            guard let userid = firebase.user?.uid else {
+            guard let userid = firebase.currentUser?.uid else {
                 alertIsPresented = true
                 alert = .userDoesNotExist
                 return
             }
-            user = try await User.fetchUser(userid)
+            user = try await UserFirestore.fetchUser(userid, firestoreService: firestore)
         } catch {
             alertIsPresented = true
             alert = .notAbleToFetchUser
