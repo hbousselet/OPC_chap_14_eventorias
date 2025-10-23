@@ -10,20 +10,20 @@ import XCTest
 
 
 final class EventModelTests: XCTestCase {
-    var firestoreService: FirestoreServiceMock!
+    var firestoreServiceMock: FirestoreServiceMock!
 
     override func setUpWithError() throws {
-        firestoreService = FirestoreServiceMock()
+        firestoreServiceMock = FirestoreServiceMock()
     }
 
     override func tearDownWithError() throws {
-        firestoreService.shouldSuccess = false
-        firestoreService.data = nil
+        firestoreServiceMock.shouldSuccess = false
+        firestoreServiceMock.data = nil
     }
     
     @MainActor
     func testFetchEventsOk() async throws {
-        firestoreService.shouldSuccess = true
+        firestoreServiceMock.shouldSuccess = true
         
         let data =  """
         [
@@ -42,9 +42,9 @@ final class EventModelTests: XCTestCase {
         ]
         """.data(using: .utf8)!
         
-        firestoreService.data = data
+        firestoreServiceMock.data = data
         do {
-            let events: [Event] = try await Event.fetchEvents(firestoreService: firestoreService)
+            let events: [Event] = try await Event.fetchEvents(firestoreService: firestoreServiceMock)
             XCTAssert(events.count == 2)
         } catch {
             XCTFail("Should not catch the error")
@@ -53,9 +53,9 @@ final class EventModelTests: XCTestCase {
     
     @MainActor
     func testFetchEventsNOk() async throws {
-        firestoreService.shouldSuccess = false
+        firestoreServiceMock.shouldSuccess = false
         do {
-            let _: [Event] = try await Event.fetchEvents(firestoreService: firestoreService)
+            let _: [Event] = try await Event.fetchEvents(firestoreService: firestoreServiceMock)
             XCTFail("Should catch an error")
         } catch {
             XCTAssert(error as! EventoriasAlerts == .failedMultiFetch)
@@ -64,7 +64,7 @@ final class EventModelTests: XCTestCase {
     
     @MainActor
     func testFetchEventOk() async throws {
-        firestoreService.shouldSuccess = true
+        firestoreServiceMock.shouldSuccess = true
         
         let jsonString =  """
         [
@@ -86,9 +86,9 @@ final class EventModelTests: XCTestCase {
         let data =  jsonString.data(using: .utf8)!
         
 
-        firestoreService.data = data
+        firestoreServiceMock.data = data
         do {
-            let event: Event = try await Event.fetchEvent(with: "xjknsq",firestoreService: firestoreService)
+            let event: Event = try await Event.fetchEvent(with: "xjknsq",firestoreService: firestoreServiceMock)
             XCTAssert(event.identifier == "xjknsq")
             XCTAssert(event.type == .museum)
         } catch {
@@ -98,9 +98,9 @@ final class EventModelTests: XCTestCase {
     
     @MainActor
     func testFetchEventNOk() async throws {
-        firestoreService.shouldSuccess = false
+        firestoreServiceMock.shouldSuccess = false
         do {
-            let _ : Event = try await Event.fetchEvent(with: "xjknsq",firestoreService: firestoreService)
+            let _ : Event = try await Event.fetchEvent(with: "xjknsq",firestoreService: firestoreServiceMock)
             XCTFail("Should catch an error")
         } catch {
             XCTAssert(error as! EventoriasAlerts == .failedFetch)

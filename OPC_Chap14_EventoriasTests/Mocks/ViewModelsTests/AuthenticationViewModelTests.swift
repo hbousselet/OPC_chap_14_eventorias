@@ -12,21 +12,21 @@ import FirebaseAuth
 
 final class AuthenticationViewModelTests: XCTestCase {
     var authFirebaseMock: AuthFirebaseMock!
-    var firestoreService: FirestoreServiceMock!
+    var firestoreServiceMock: FirestoreServiceMock!
 
 
 
     override func setUpWithError() throws {
         authFirebaseMock = AuthFirebaseMock()
-        firestoreService = FirestoreServiceMock()
+        firestoreServiceMock = FirestoreServiceMock()
     }
 
     override func tearDownWithError() throws {
         authFirebaseMock.currentUser = nil
         authFirebaseMock.isAuthenticated = false
         authFirebaseMock.shouldSuccess = false
-        firestoreService.shouldSuccess = false
-        firestoreService.data = nil
+        firestoreServiceMock.shouldSuccess = false
+        firestoreServiceMock.data = nil
     }
     
     @MainActor
@@ -82,8 +82,8 @@ final class AuthenticationViewModelTests: XCTestCase {
     @MainActor
     func testSignUpOk() async {
         authFirebaseMock.shouldSuccess = true
-        firestoreService.shouldSuccess = true
-        firestoreService.createOnly = true
+        firestoreServiceMock.shouldSuccess = true
+        firestoreServiceMock.createOnly = true
 
         let authViewModel = AuthenticationViewModel(firebase: authFirebaseMock)
         authViewModel.email = "test@test.com"

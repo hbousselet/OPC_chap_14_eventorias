@@ -45,7 +45,6 @@ final class FirestoreServiceMock: DBAccessProtocol {
         if shouldSuccess {
             let decodedData = try decoder.decode([T].self, from: data!)
             return decodedData.first(where: { $0.identifier == id })!
-//            return try decoder.decode(T.self, from: data!)
         } else {
             throw EventoriasAlerts.failedFetch
         }

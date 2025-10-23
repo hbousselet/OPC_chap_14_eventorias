@@ -6,6 +6,9 @@
 //
 
 import XCTest
+import FirebaseAuth
+@testable import OPC_Chap14_Eventorias
+
 
 final class EventCreationViewModelTests: XCTestCase {
 

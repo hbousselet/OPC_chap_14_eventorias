@@ -9,21 +9,21 @@ import XCTest
 @testable import OPC_Chap14_Eventorias
 
 final class UserModelTests: XCTestCase {
-    var firestoreService: FirestoreServiceMock!
+    var firestoreServiceMock: FirestoreServiceMock!
 
     override func setUpWithError() throws {
-        firestoreService = FirestoreServiceMock()
+        firestoreServiceMock = FirestoreServiceMock()
     }
 
     override func tearDownWithError() throws {
-        firestoreService.shouldSuccess = false
-        firestoreService.data = nil
+        firestoreServiceMock.shouldSuccess = false
+        firestoreServiceMock.data = nil
     }
     
     @MainActor
     func testPopulateUserOk() async throws {
-        firestoreService.shouldSuccess = true
-        firestoreService.createOnly = true
+        firestoreServiceMock.shouldSuccess = true
+        firestoreServiceMock.createOnly = true
         
         let user = UserFirestore(name: "Tester Pro",
                         email: "test@test.com",
@@ -31,7 +31,7 @@ final class UserModelTests: XCTestCase {
                         notification: false)
         
         do {
-            try await user.populateUser("test", firestoreService: firestoreService)
+            try await user.populateUser("test", firestoreService: firestoreServiceMock)
         } catch {
             XCTFail("Should not catch the error")
         }
@@ -39,7 +39,7 @@ final class UserModelTests: XCTestCase {
     
     @MainActor
     func testPopulateUserNOk() async throws {
-        firestoreService.shouldSuccess = false
+        firestoreServiceMock.shouldSuccess = false
         
         let user = UserFirestore(name: "Tester Pro",
                         email: "test@test.com",
@@ -47,7 +47,7 @@ final class UserModelTests: XCTestCase {
                         notification: false)
         
         do {
-            try await user.populateUser("test", firestoreService: firestoreService)
+            try await user.populateUser("test", firestoreService: firestoreServiceMock)
         } catch {
             XCTAssert(error as! EventoriasAlerts == .failedCreate)
         }
@@ -55,7 +55,7 @@ final class UserModelTests: XCTestCase {
     
     @MainActor
     func testUserOk() async throws {
-        firestoreService.shouldSuccess = true
+        firestoreServiceMock.shouldSuccess = true
         
         let jsonString =  """
         [
@@ -74,9 +74,9 @@ final class UserModelTests: XCTestCase {
         
         let data =  jsonString.data(using: .utf8)!
         
-        firestoreService.data = data
+        firestoreServiceMock.data = data
         do {
-            let user: UserFirestore = try await UserFirestore.fetchUser("hsbjhbsxj", firestoreService: firestoreService)
+            let user: UserFirestore = try await UserFirestore.fetchUser("hsbjhbsxj", firestoreService: firestoreServiceMock)
             XCTAssert(user.identifier == "hsbjhbsxj")
             XCTAssert(user.name == "Jean Marocco")
         } catch {
@@ -86,9 +86,9 @@ final class UserModelTests: XCTestCase {
     
     @MainActor
     func testUserNOk() async throws {
-        firestoreService.shouldSuccess = false
+        firestoreServiceMock.shouldSuccess = false
         do {
-            let _ : UserFirestore = try await UserFirestore.fetchUser("hsbjhbsxj", firestoreService: firestoreService)
+            let _ : UserFirestore = try await UserFirestore.fetchUser("hsbjhbsxj", firestoreService: firestoreServiceMock)
             XCTFail("Should catch an error")
         } catch {
             XCTAssert(error as! EventoriasAlerts == .notAbleToFetchUser)
