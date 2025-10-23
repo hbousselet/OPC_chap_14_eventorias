@@ -13,10 +13,20 @@ final class FirestoreServiceMock: DBAccessProtocol {
     var dbService = FirestoreMock()
     
     var shouldSuccess: Bool = true
+    var createOnly: Bool = true
+    var returnedDocumentId: String? = nil
     var data: Data?
     
     func create(data: [String : Any], to id: String?) async throws -> String? {
-        return nil
+        if shouldSuccess {
+            if createOnly {
+                return nil
+            } else {
+                return returnedDocumentId
+            }
+        } else {
+            throw EventoriasAlerts.failedCreate
+        }
     }
     
     func multipleFetch<T>() async throws -> [T] where T : Decodable {

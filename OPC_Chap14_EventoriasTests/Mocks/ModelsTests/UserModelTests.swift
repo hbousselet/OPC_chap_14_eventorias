@@ -9,27 +9,89 @@ import XCTest
 @testable import OPC_Chap14_Eventorias
 
 final class UserModelTests: XCTestCase {
+    var firestoreService: FirestoreServiceMock!
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        firestoreService = FirestoreServiceMock()
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        firestoreService.shouldSuccess = false
+        firestoreService.data = nil
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    
+    @MainActor
+    func testPopulateUserOk() async throws {
+        firestoreService.shouldSuccess = true
+        firestoreService.createOnly = true
+        
+        let user = UserFirestore(name: "Tester Pro",
+                        email: "test@test.com",
+                        icon: nil,
+                        notification: false)
+        
+        do {
+            try await user.populateUser("test", firestoreService: firestoreService)
+        } catch {
+            XCTFail("Should not catch the error")
+        }
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    
+    @MainActor
+    func testPopulateUserNOk() async throws {
+        firestoreService.shouldSuccess = false
+        
+        let user = UserFirestore(name: "Tester Pro",
+                        email: "test@test.com",
+                        icon: nil,
+                        notification: false)
+        
+        do {
+            try await user.populateUser("test", firestoreService: firestoreService)
+        } catch {
+            XCTAssert(error as! EventoriasAlerts == .failedCreate)
+        }
+    }
+    
+    @MainActor
+    func testUserOk() async throws {
+        firestoreService.shouldSuccess = true
+        
+        let jsonString =  """
+        [
+        {   "name": "Jean Marocco",
+            "email": "jean.marocco@gmail.com",
+            "notification": true,
+            "identifier": "hsbjhbsxj"
+        },
+        {   "name": "Pierre Milan",
+            "email": "pierre.milan@gmail.com",
+            "notification": false,
+            "identifier": "csjkoiwjqs"
+        }
+        ]
+        """
+        
+        let data =  jsonString.data(using: .utf8)!
+        
+        firestoreService.data = data
+        do {
+            let user: UserFirestore = try await UserFirestore.fetchUser("hsbjhbsxj", firestoreService: firestoreService)
+            XCTAssert(user.identifier == "hsbjhbsxj")
+            XCTAssert(user.name == "Jean Marocco")
+        } catch {
+            XCTFail("Should not catch the error")
+        }
+    }
+    
+    @MainActor
+    func testUserNOk() async throws {
+        firestoreService.shouldSuccess = false
+        do {
+            let _ : UserFirestore = try await UserFirestore.fetchUser("hsbjhbsxj", firestoreService: firestoreService)
+            XCTFail("Should catch an error")
+        } catch {
+            XCTAssert(error as! EventoriasAlerts == .notAbleToFetchUser)
         }
     }
 

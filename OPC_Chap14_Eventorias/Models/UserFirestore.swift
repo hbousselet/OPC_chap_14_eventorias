@@ -24,7 +24,7 @@ protocol IdentifiableByString {
 extension UserFirestore {
     func populateUser(_ documentId: String, firestoreService: any DBAccessProtocol) async throws {
         do {
-            try await firestoreService.create(data: [
+            let _ = try await firestoreService.create(data: [
                 "name": name,
                 "email": email,
                 "icon": icon ?? "",
