@@ -12,22 +12,25 @@ import FirebaseAuth
 
 final class AuthenticationViewModelTests: XCTestCase {
     var authFirebaseMock: AuthFirebaseMock!
+    var firestoreService: FirestoreServiceMock!
+
 
 
     override func setUpWithError() throws {
         authFirebaseMock = AuthFirebaseMock()
+        firestoreService = FirestoreServiceMock()
     }
 
     override func tearDownWithError() throws {
         authFirebaseMock.currentUser = nil
         authFirebaseMock.isAuthenticated = false
         authFirebaseMock.shouldSuccess = false
+        firestoreService.shouldSuccess = false
+        firestoreService.data = nil
     }
     
     @MainActor
     func testSignInOk() async {
-        let expectation = XCTestExpectation(description: "Sign in ok")
-        
         authFirebaseMock.shouldSuccess = true
         let authViewModel = AuthenticationViewModel(firebase: authFirebaseMock)
         authViewModel.email = "test@test.com"
@@ -40,8 +43,6 @@ final class AuthenticationViewModelTests: XCTestCase {
     
     @MainActor
     func testSignInNokInvalidEmail() async {
-        let expectation = XCTestExpectation(description: "Sign in nok with invalid email")
-        
         let authViewModel = AuthenticationViewModel(firebase: authFirebaseMock)
         authViewModel.email = "testtest.com"
         authViewModel.password = "test"
@@ -54,8 +55,6 @@ final class AuthenticationViewModelTests: XCTestCase {
     
     @MainActor
     func testSignInNokPasswordEmpty() async {
-        let expectation = XCTestExpectation(description: "Sign in nok with empty password")
-        
         let authViewModel = AuthenticationViewModel(firebase: authFirebaseMock)
         authViewModel.email = "test@test.com"
         authViewModel.password = ""
@@ -68,8 +67,6 @@ final class AuthenticationViewModelTests: XCTestCase {
     
     @MainActor
     func testSignInNok() async {
-        let expectation = XCTestExpectation(description: "Sign in nok.")
-        
         authFirebaseMock.shouldSuccess = false
         let authViewModel = AuthenticationViewModel(firebase: authFirebaseMock)
         authViewModel.email = "test@test.com"
@@ -84,9 +81,10 @@ final class AuthenticationViewModelTests: XCTestCase {
     
     @MainActor
     func testSignUpOk() async {
-        let expectation = XCTestExpectation(description: "Sign up ok")
-        
         authFirebaseMock.shouldSuccess = true
+        firestoreService.shouldSuccess = true
+        firestoreService.createOnly = true
+
         let authViewModel = AuthenticationViewModel(firebase: authFirebaseMock)
         authViewModel.email = "test@test.com"
         authViewModel.password = "test"
