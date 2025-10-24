@@ -5,31 +5,35 @@
 //  Created by Hugues BOUSSELET on 21/10/2025.
 //
 
-import XCTest
+import Foundation
+import FirebaseStorage
+@testable import OPC_Chap14_Eventorias
 
-final class StorageFirebaseMock: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+class StorageFirebaseMock: StorageProtocol {
+    var shouldSuccess: Bool = true
+    var data: Data? = nil
+    var url: URL? = nil
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    func child(_ path: String) { }
+    
+    func putDataAsync(_ uploadData: Data, metadata: FirebaseStorage.StorageMetadata?, onProgress: ((Progress?) -> Void)?) async throws -> FirebaseStorage.StorageMetadata {
+        if shouldSuccess {
+            return FirebaseStorage.StorageMetadata(dictionary: ["test": "coucou"])
+        } else {
+            throw EventoriasAlerts.notAbleToExportImage
         }
     }
-
+    
+    func downloadURL() async throws -> URL {
+        if shouldSuccess {
+            return url!
+        } else {
+            throw EventoriasAlerts.imageUrlNotFound
+        }
+    }
+    
+    var storageReference: FirebaseStorage.StorageReference = Storage.storage().reference(withPath:"test")
+    
+    
 }

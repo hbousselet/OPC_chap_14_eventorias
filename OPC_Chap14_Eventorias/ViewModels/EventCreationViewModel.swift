@@ -76,7 +76,7 @@ protocol EventCreationProtocol {
             dismiss = true
         } catch {
             alertIsPresented = true
-            alert = .failedEventCreation
+            alert = error as? EventoriasAlerts ?? .failedEventCreation
         }
     }
     
