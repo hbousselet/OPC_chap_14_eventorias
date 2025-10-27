@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "847B4026-7B3D-4459-8C15-B6A1157623AA",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:OPC_Chap14_Eventorias.xcodeproj",
+      "identifier" : "A31A5CFD2E7D897B005804EA",
+      "name" : "OPC_Chap14_Eventorias"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:OPC_Chap14_Eventorias.xcodeproj",
+        "identifier" : "A39668632EA4F10E00EA2144",
+        "name" : "OPC_Chap14_EventoriasTests"
+      }
+    }
+  ],
+  "version" : 1
+}

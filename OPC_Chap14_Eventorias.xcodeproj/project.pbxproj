@@ -29,6 +29,7 @@
 
 /* Begin PBXFileReference section */
 		A31A5CFE2E7D897B005804EA /* OPC_Chap14_Eventorias.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OPC_Chap14_Eventorias.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A37FFFCC2EAFA887004D4D14 /* OPC_Chap14_Eventorias.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OPC_Chap14_Eventorias.xctestplan; sourceTree = "<group>"; };
 		A39668642EA4F10E00EA2144 /* OPC_Chap14_EventoriasTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OPC_Chap14_EventoriasTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -74,6 +75,7 @@
 		A31A5CF52E7D897B005804EA = {
 			isa = PBXGroup;
 			children = (
+				A37FFFCC2EAFA887004D4D14 /* OPC_Chap14_Eventorias.xctestplan */,
 				A31A5D002E7D897B005804EA /* OPC_Chap14_Eventorias */,
 				A39668652EA4F10E00EA2144 /* OPC_Chap14_EventoriasTests */,
 				A31A5CFF2E7D897B005804EA /* Products */,

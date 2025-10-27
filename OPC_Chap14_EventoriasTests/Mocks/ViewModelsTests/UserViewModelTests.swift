@@ -85,8 +85,6 @@ final class UserViewModelTests: XCTestCase {
         await userViewModel.fetchUser()
         
         XCTAssert(userViewModel.alertIsPresented == true)
-        XCTAssert(userViewModel.alert == EventoriasAlerts.notAbleToFetchUser)
-        
-        
+        XCTAssert(userViewModel.alert == EventoriasAlerts.notAbleToFetchUser)  
     }
 }

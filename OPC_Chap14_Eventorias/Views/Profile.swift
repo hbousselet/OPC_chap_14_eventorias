@@ -43,19 +43,18 @@ struct Profile: View {
                             .padding(.leading, 12)
                         Spacer()
                     }
-//                    .offset(x: -300)
                     Spacer()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 16)
                 .padding(.top, 36)
             }
-            .padding(.top, 66)
+            .padding(.top, 80)
             .ignoresSafeArea(edges: .top)
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                CustomImage(url: viewModel.user.icon, size: CGSize(width: 32, height: 32))
+                UserImage(url: viewModel.user.icon, size: CGSize(width: 32, height: 32))
                     .clipShape(Circle())
             }
             ToolbarItem(placement: .topBarLeading) {
@@ -64,6 +63,32 @@ struct Profile: View {
                     .fixedSize()
             }
             .sharedBackgroundVisibility(.hidden)
+        }
+    }
+}
+
+struct UserImage: View {
+    let url: URL?
+    let size: CGSize
+    
+    var body: some View {
+        AsyncImage(url: url) { phase in
+            switch phase {
+            case .empty:
+                ProgressView()
+                    .frame(width: size.width, height: size.height)
+            case .success(let image):
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: size.width, height: size.height)
+            case .failure:
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .frame(width: size.width, height: size.height)
+            @unknown default:
+                EmptyView()
+            }
         }
     }
 }
