@@ -45,6 +45,7 @@ struct EventsList: View {
                                         }, label: {
                                             eventElement(event, with: geometry.size)
                                                 .frame(width: geometry.size.width * 0.9, height: 80)
+                                                .accessibilityAddTraits(.isButton)
                                         })
                                     }
                                     .padding(.top, 4)
@@ -216,5 +217,6 @@ struct CustomTextField: View {
             .padding(.all)
             .frame(height: 35)
             .background(Color.textfieldBackground, in: .capsule)
+            .accessibilityElement(children: .combine)
     }
 }
