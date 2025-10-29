@@ -32,17 +32,18 @@ struct Profile: View {
                                        promptValue: $viewModel.user.email,
                                        size: CGSize(width: 358, height: 56))
                     }
-                    .padding(.horizontal, 16)
                     
                     HStack {
-                        Toggle("", isOn: $viewModel.user.notification)
-                            .toggleStyle(.switch)
-                            .tint(.red)
                         Text("Notifications")
                             .font(.custom("Inter_18pt-Regular", size: 16))
                             .padding(.leading, 12)
+                        Toggle("", isOn: $viewModel.user.notification)
+                            .toggleStyle(.switch)
+                            .tint(.red)
                         Spacer()
                     }
+                    
+                    .accessibilityElement(children: .combine)
                     Spacer()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)

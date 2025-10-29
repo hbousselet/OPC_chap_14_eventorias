@@ -34,6 +34,7 @@ struct CustoTextfield: View {
         .padding(.leading, 16)
         .frame(width: size.width, height: size.height)
         .background(Color.textfieldBackground)
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -84,6 +85,7 @@ struct CustoTextfieldPassword: View {
         .padding(.leading, 16)
         .frame(width: size.width, height: size.height)
         .background(Color.textfieldBackground)
+        .accessibilityElement(children: .combine)
     }
 }
 
