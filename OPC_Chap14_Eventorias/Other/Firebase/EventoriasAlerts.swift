@@ -8,13 +8,9 @@
 import Foundation
 
 enum EventoriasAlerts: Error, Equatable {
-    case notAbleToFetchEvents
-    case notAbleToDownloadImage
     case notAbleToFetchUser
     case userDoesNotExist
-    case notAbleToLoadUserImage
     case notAbleToSignIn
-    case notAbleToPopulateUserInDb
     case emptyPassword
     case emptyName
     case invalidEmail
@@ -31,27 +27,18 @@ enum EventoriasAlerts: Error, Equatable {
     case failedEventCreation
     case notAbleToExportImage
     case imageUrlNotFound
-    case notAbleToCreateFirebaseUser
     case none
     
     var errorDescription: String? {
         switch self {
         case .none:
             return "No error"
-        case .notAbleToFetchEvents:
-            return "Not able to fetch events."
-        case .notAbleToDownloadImage:
-            return "Not able to download image."
         case .notAbleToFetchUser:
             return "Not able to fetch user."
-        case .notAbleToLoadUserImage:
-            return "Not able to load user's image."
         case .userDoesNotExist:
             return "User does not exist"
         case .notAbleToSignIn:
             return "Not able to sign in. Please retry."
-        case .notAbleToPopulateUserInDb:
-            return "Not able to populate the user from authentication to db."
         case .emptyPassword:
             return "Password is empty. Retry with a valid password."
         case .invalidEmail:
@@ -78,8 +65,6 @@ enum EventoriasAlerts: Error, Equatable {
             return "Not able to export image."
         case .imageUrlNotFound:
             return "Image url not found."
-        case .notAbleToCreateFirebaseUser:
-            return "Not able to create firebase user. Please try again."
         case .failedCreate:
             return "Failed to create the object and to store it in database."
         case .failedMultiFetch:
