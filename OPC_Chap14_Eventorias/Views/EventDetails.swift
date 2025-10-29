@@ -34,6 +34,7 @@ struct EventDetails: View {
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                         dateInfo
                             .padding(.top)
+                            .accessibilityElement(children: .combine)
                         eventDescription
                             .padding(.top, 5)
                         addressInfo
@@ -98,6 +99,8 @@ struct EventDetails: View {
             }
             Spacer()
             showMap()
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Location")
         }
     }
     
