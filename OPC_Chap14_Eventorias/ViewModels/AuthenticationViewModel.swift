@@ -79,7 +79,7 @@ import FirebaseAuth
     }
     
     private func populateUserInDb() async throws {
-        let user = UserFirestore(name: name,
+        let user = EventoriasUser(name: name,
                         email: email,
                         icon: nil,
                         notification: false)

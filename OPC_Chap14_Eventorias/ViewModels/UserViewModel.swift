@@ -13,7 +13,7 @@ protocol UserProtocol {
 }
 
 @Observable class UserViewModel: UserProtocol {
-    var user: UserFirestore
+    var user: EventoriasUser
     var alertIsPresented: Bool = false
     var alert: EventoriasAlerts? = Optional.none
     var firebase: AuthFirebaseProtocol
@@ -23,7 +23,7 @@ protocol UserProtocol {
          firestore: any DBAccessProtocol = FirestoreService(collection: "User")) {
         self.firebase = firebase
         self.firestore = firestore
-        self.user = UserFirestore(name: "",
+        self.user = EventoriasUser(name: "",
                     email: firebase.currentUser?.email ?? "",
                     icon: nil,
                     notification: false)
@@ -36,7 +36,7 @@ protocol UserProtocol {
                 alert = .userDoesNotExist
                 return
             }
-            user = try await UserFirestore.fetchUser(userid, firestoreService: firestore)
+            user = try await EventoriasUser.fetchUser(userid, firestoreService: firestore)
         } catch {
             alertIsPresented = true
             alert = .notAbleToFetchUser

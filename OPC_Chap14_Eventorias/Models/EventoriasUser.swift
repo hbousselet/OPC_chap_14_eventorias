@@ -1,5 +1,5 @@
 //
-//  User.swift
+//  EventoriasUser.swift
 //  OPC_Chap14_Eventorias
 //
 //  Created by Hugues BOUSSELET on 24/09/2025.
@@ -9,7 +9,7 @@ import Foundation
 import FirebaseCore
 import FirebaseFirestore
 
-struct UserFirestore: Codable, Equatable, Hashable, IdentifiableByString {
+struct EventoriasUser: Codable, Equatable, Hashable, IdentifiableByString {
     var name: String
     var email: String
     let icon: URL?
@@ -21,7 +21,7 @@ protocol IdentifiableByString {
     var identifier: String? { get }
 }
 
-extension UserFirestore {
+extension EventoriasUser {
     func populateUser(_ documentId: String, firestoreService: any DBAccessProtocol) async throws {
         do {
             let _ = try await firestoreService.create(data: [

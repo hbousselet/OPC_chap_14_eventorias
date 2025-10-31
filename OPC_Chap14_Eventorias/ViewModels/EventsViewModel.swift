@@ -60,7 +60,7 @@ protocol EventsProtocol {
                 let convertedEvents: [EventModel] = firestoreEvents.compactMap { $0.convert() }
                 
             for (index, event) in convertedEvents.enumerated() {
-                let user = try await UserFirestore.fetchUser(event.user, firestoreService: userFirestore)
+                let user = try await EventoriasUser.fetchUser(event.user, firestoreService: userFirestore)
                 let imageUrl = try await retrieveImageUrl(of: event.image)
                 events.append(event)
                 events[index].profil = user
@@ -85,7 +85,7 @@ protocol EventsProtocol {
         do {
             let firestoreEvent = try await Event.fetchEvent(with: documentId, firestoreService: eventFirestore)
             var convertedEvent: EventModel = firestoreEvent.convert()
-            let user = try await UserFirestore.fetchUser(convertedEvent.user, firestoreService: userFirestore)
+            let user = try await EventoriasUser.fetchUser(convertedEvent.user, firestoreService: userFirestore)
             let imageUrl = try await retrieveImageUrl(of: convertedEvent.image)
             convertedEvent.profil = user
             convertedEvent.imageUrl = imageUrl
