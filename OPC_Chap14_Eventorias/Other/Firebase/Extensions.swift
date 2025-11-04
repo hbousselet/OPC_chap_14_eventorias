@@ -56,7 +56,8 @@ struct CustomImage: View {
         .indicator(.activity)
         .transition(.fade(duration: 0.5))
         .scaledToFill()
-        .frame(width: size.width, height: size.height)
+        .frame(width: max(0, size.width.isFinite ? size.width : 0), 
+               height: max(0, size.height.isFinite ? size.height : 0))
     }
 }
 
